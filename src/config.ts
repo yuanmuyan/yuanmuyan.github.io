@@ -12,12 +12,12 @@ export const siteConfig: SiteConfig = {
 	subtitle: "Little Steps of Growth",
 	lang: "zh_CN",
 	themeColor: {
-		hue: 250,
+		hue: 130,
 		fixed: false,
 	},
 	banner: {
 		enable: true,
-		src: "assets/images/demo-banner.png",
+		 src: "assets/images/firefly.png",
 		position: "center",
 		credit: {
 			enable: false,
