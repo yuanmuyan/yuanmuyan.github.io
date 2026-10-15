@@ -1,0 +1,47 @@
+---
+import MainGridLayout from "../layouts/MainGridLayout.astro";
+---
+
+<MainGridLayout title="友链" description="我的朋友们">
+    <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
+        <div class="card-base z-10 px-9 py-6 relative w-full">
+            <div class="text-2xl font-bold text-[var(--primary)] mb-3">朋友们</div>
+            <div class="text-black/50 dark:text-white/50 mb-6">这里是我的朋友们，欢迎去他们的站点逛逛。</div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <a href="https://map1e-suk1.github.io/" target="_blank" rel="noopener noreferrer" class="card-base card-shadow p-4 flex items-center gap-4 group transition hover:-translate-y-0.5 active:scale-[0.99]">
+                    <div class="min-w-0 flex-1">
+                        <div class="text-lg font-bold truncate text-black dark:text-white transition group-hover:text-[var(--primary)]">Map1e-Suk1</div>
+                        <div class="text-sm text-black/40 dark:text-white/40 truncate">Astro + Fuwari，写题解的那位</div>
+                    </div>
+                    <span class="text-black/20 dark:text-white/20 group-hover:text-[var(--primary)] transition shrink-0">↗</span>
+                </a>
+                <a href="https://kioroshiaki.github.io/" target="_blank" rel="noopener noreferrer" class="card-base card-shadow p-4 flex items-center gap-4 group transition hover:-translate-y-0.5 active:scale-[0.99]">
+                    <div class="min-w-0 flex-1">
+                        <div class="text-lg font-bold truncate text-black dark:text-white transition group-hover:text-[var(--primary)]">Kioroshi Aki</div>
+                        <div class="text-sm text-black/40 dark:text-white/40 truncate">Hugo + Blowfish，主攻 Pwn</div>
+                    </div>
+                    <span class="text-black/20 dark:text-white/20 group-hover:text-[var(--primary)] transition shrink-0">↗</span>
+                </a>
+                <a href="https://piyuanzhoulv.github.io/" target="_blank" rel="noopener noreferrer" class="card-base card-shadow p-4 flex items-center gap-4 group transition hover:-translate-y-0.5 active:scale-[0.99]">
+                    <div class="min-w-0 flex-1">
+                        <div class="text-lg font-bold truncate text-black dark:text-white transition group-hover:text-[var(--primary)]">圆周率的废纸堆</div>
+                        <div class="text-sm text-black/40 dark:text-white/40 truncate">Hexo + cactus，出题人</div>
+                    </div>
+                    <span class="text-black/20 dark:text-white/20 group-hover:text-[var(--primary)] transition shrink-0">↗</span>
+                </a>
+                <a href="https://blog.3w3.asia/" target="_blank" rel="noopener noreferrer" class="card-base card-shadow p-4 flex items-center gap-4 group transition hover:-translate-y-0.5 active:scale-[0.99]">
+                    <div class="min-w-0 flex-1">
+                        <div class="text-lg font-bold truncate text-black dark:text-white transition group-hover:text-[var(--primary)]">宛宛（Wan blog）</div>
+                        <div class="text-sm text-black/40 dark:text-white/40 truncate">自建 Rin，人生五十年，如梦亦如幻</div>
+                    </div>
+                    <span class="text-black/20 dark:text-white/20 group-hover:text-[var(--primary)] transition shrink-0">↗</span>
+                </a>
+            </div>
+
+            <div class="mt-6 text-sm text-black/40 dark:text-white/40">
+                想交换友链？在 <a class="text-[var(--primary)] hover:underline" href="https://github.com/yuanmuyan" target="_blank" rel="noopener noreferrer">GitHub</a> 上找我就行。
+            </div>
+        </div>
+    </div>
+</MainGridLayout>
