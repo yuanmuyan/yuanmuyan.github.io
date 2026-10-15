@@ -34,10 +34,10 @@ export const siteConfig: SiteConfig = {
 
 export const navBarConfig: NavBarConfig = {
 	links: [
-		{ name: "友链", url: "/friends/", external: false },
 		LinkPreset.Home,
 		LinkPreset.Archive,
 		LinkPreset.About,
+		{ name: "友链", url: "/friends/", external: false },
 		{
 			name: "GitHub",
 			url: "https://github.com/yuanmuyan",
