@@ -141,6 +141,90 @@ const bannerOffset =
 			offset = offset - offset % 4;
 			document.documentElement.style.setProperty('--banner-height-extend', `${offset}px`);
 		</script>
+
+		<!-- ===== 入场动画：第一次进站时，在幕布上把名字「写」出来（Allura 签名体 + 扫掠笔尖）+ 萤火虫，收焦后揭开 =====
+		     样式放这里（内联）是为了在第一帧就画上幕布，不然会先闪一下页面。
+		     颜色直接吃站上那套变量，所以明暗两个主题都是本来的底色。 -->
+		<style is:inline>
+			#intro {
+				--intro-ink: oklch(0.70 0.14 var(--hue));
+				--intro-bg: oklch(0.95 0.01 var(--hue));
+				position: fixed;
+				inset: 0;
+				z-index: 9999;
+				display: grid;
+				place-items: center;
+				background: var(--intro-bg);
+			}
+			html.dark #intro {
+				--intro-ink: oklch(0.75 0.14 var(--hue));
+				--intro-bg: oklch(0.16 0.014 var(--hue));
+			}
+			#intro .intro-box {
+				grid-area: 1 / 1;
+				width: min(78vw, 900px);
+			}
+			#intro svg {
+				display: block;
+				width: 100%;
+				height: auto;
+				overflow: visible;
+			}
+			#intro #introInk {
+				fill: var(--intro-ink);
+				font-family: "Allura Signature", "Segoe Script", "Brush Script MT", cursive;
+				font-size: 1000px;
+				font-kerning: none;
+				font-variant-ligatures: none;
+				text-rendering: geometricPrecision;
+			}
+			#intro #introHalo {
+				fill: url(#introHaloGrad);
+			}
+			#intro #introTip {
+				fill: url(#introTipGrad);
+			}
+			#intro #introHaloGrad stop,
+			#intro #introTipGrad stop {
+				stop-color: var(--intro-ink);
+			}
+			/* 收焦用的静态糊层：内容跟着清晰层实时变（<use> 是活的），但只在收焦那 220ms 里才显示 */
+			#intro #introBlur {
+				display: none;
+				opacity: 0;
+				filter: blur(26px);
+			}
+			#intro .intro-flies {
+				position: absolute;
+				inset: 0;
+				pointer-events: none;
+			}
+			#intro .intro-fly {
+				position: absolute;
+				width: 6px;
+				height: 6px;
+				border-radius: 50%;
+				background: var(--intro-ink);
+				opacity: 0;
+				box-shadow: 0 0 10px 3px color-mix(in srgb, var(--intro-ink) 55%, transparent);
+			}
+			@keyframes introDrift {
+				0% { transform: translate3d(0, 0, 0) scale(1); }
+				25% { transform: translate3d(24px, -18px, 0) scale(1.15); }
+				50% { transform: translate3d(-14px, -34px, 0) scale(0.9); }
+				75% { transform: translate3d(18px, -12px, 0) scale(1.05); }
+				100% { transform: translate3d(0, 0, 0) scale(1); }
+			}
+			@media (max-width: 700px) {
+				#intro .intro-box { width: 86vw; }
+			}
+			/* 系统开了「减少动态效果」就别挡住人家：直接不出现（JS 里也会再拦一次） */
+			@media (prefers-reduced-motion: reduce) {
+				#intro { display: none; }
+			}
+		</style>
+		<noscript><style>#intro { display: none !important; }</style></noscript>
+
 		<style define:vars={{
 			configHue,
 			'page-width': `${PAGE_WIDTH}rem`,
@@ -155,6 +239,241 @@ const bannerOffset =
 	<body class=" min-h-screen transition " class:list={[{"lg:is-home": isHomePage, "enable-banner": enableBanner}]}
 		  data-overlayscrollbars-initialize
 	>
+		<!-- ===== 入场动画的幕布 + 脚本 =====
+		     每会话只播一次；点击 / 滚动 / 按任意键跳过；系统开了「减少动态效果」就不播（CSS 里也兜了一层）。
+		     想反复看：地址栏加 ?intro=1　想这次跳过：?intro=0 -->
+		<div id="intro" aria-hidden="true">
+			<div class="intro-flies" id="introFlies"></div>
+			<div class="intro-box" id="introSharpBox">
+				<svg viewBox="0 0 4142.89 672">
+					<defs>
+						<mask id="introSweepMask" maskUnits="userSpaceOnUse" x="-140" y="-40" width="4400" height="752">
+							<rect id="introSweepRect" x="-140" y="-40" width="0" height="752" fill="#fff" />
+						</mask>
+						<radialGradient id="introHaloGrad">
+							<stop offset="0" stop-opacity="0.34" />
+							<stop offset="1" stop-opacity="0" />
+						</radialGradient>
+						<radialGradient id="introTipGrad">
+							<stop offset="0" stop-opacity="1" />
+							<stop offset="0.4" stop-opacity="0.55" />
+							<stop offset="1" stop-opacity="0" />
+						</radialGradient>
+						<filter id="introSoft" x="-60%" y="-60%" width="220%" height="220%">
+							<feGaussianBlur stdDeviation="16" />
+						</filter>
+					</defs>
+					<g id="introSharp">
+						<ellipse id="introHalo" cx="2071" cy="336" rx="2000" ry="560" opacity="0" />
+						<text id="introInk" x="0" y="303" opacity="0.82" mask="url(#introSweepMask)">yuanmuyan</text>
+						<circle id="introTip" r="30" cx="-300" cy="-300" opacity="0" filter="url(#introSoft)" />
+					</g>
+				</svg>
+			</div>
+			<!-- 收焦要用的静态糊层：内容用 <use> 引着上面那层（是活的），但只在收焦那 220ms 里才显示 -->
+			<div class="intro-box" id="introBlur">
+				<svg viewBox="0 0 4142.89 672">
+					<use href="#introSharp" />
+				</svg>
+			</div>
+		</div>
+		<script is:inline>
+			(() => {
+				if (window.__introStarted) return;
+				window.__introStarted = true;
+
+				const root = document.getElementById("intro");
+				if (!root) return;
+
+				const motionOK = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+				const want = new URLSearchParams(location.search).get("intro");
+				let seen = false;
+				try {
+					seen = sessionStorage.getItem("yuanmuyan-intro-v1") === "1";
+				} catch {
+					seen = false;
+				}
+
+				// 不用播的几种情况：系统关了动画 / 地址栏写了 ?intro=0 / 这一次会话已经看过了
+				if (!motionOK || want === "0" || (seen && want !== "1")) {
+					root.remove();
+					return;
+				}
+				try {
+					sessionStorage.setItem("yuanmuyan-intro-v1", "1");
+				} catch {
+					/* 隐私模式下写不进去也没事，顶多下次再看一遍 */
+				}
+
+				// 笔尖轨迹：82 个点，跟 SVG 同一套坐标（按 Allura 的墨迹重心算出来的）
+				const TIP = [
+					[0, 613.13], [51.18, 588.41], [102.37, 570.58], [153.55, 328.75],
+					[204.74, 337.84], [255.92, 335.7], [307.1, 347.56], [358.29, 366.25],
+					[409.47, 297.68], [460.66, 231.37], [511.84, 172.18], [563.02, 110.52],
+					[614.21, 99.78], [665.39, 194.38], [716.58, 209.93], [767.76, 148.08],
+					[818.94, 132.78], [870.13, 163.61], [921.31, 221.59], [972.49, 171.05],
+					[1023.68, 204.93], [1074.86, 135.41], [1126.05, 99.18], [1177.23, 192.32],
+					[1228.41, 226.59], [1279.6, 220.48], [1330.78, 189.27], [1381.97, 169.86],
+					[1433.15, 165.42], [1484.33, 149.63], [1535.52, 126.04], [1586.7, 97.45],
+					[1637.89, 181.65], [1689.07, 136.27], [1740.25, 140.07], [1791.44, 264.36],
+					[1842.62, 229.92], [1893.81, 245.2], [1944.99, 194.38], [1996.17, 113.33],
+					[2047.36, 106.26], [2098.54, 118.85], [2149.73, 196.76], [2200.91, 191.26],
+					[2252.09, 111.19], [2303.28, 107.32], [2354.46, 256.03], [2405.65, 221.04],
+					[2456.83, 245.06], [2508.01, 205.81], [2559.2, 134.99], [2610.38, 98.09],
+					[2661.57, 133.84], [2712.75, 94.41], [2763.93, 160.97], [2815.12, 112.74],
+					[2866.3, 74.04], [2917.48, 117.74], [2968.67, 204.69], [3019.85, 156.79],
+					[3071.04, 152.15], [3122.22, 265.47], [3173.4, 231.59], [3224.59, 192.16],
+					[3275.77, 207.71], [3326.96, 145.68], [3378.14, 135.01], [3429.32, 171.11],
+					[3480.51, 218.26], [3531.69, 166.06], [3582.88, 203.82], [3634.06, 128.38],
+					[3685.24, 101.31], [3736.43, 514.76], [3787.61, 467.75], [3838.8, 363.12],
+					[3889.98, 329.08], [3941.16, 338.37], [3992.35, 338.95], [4043.53, 357.23],
+					[4094.72, 345.56], [4141.38, 279.63],
+				];
+
+				const inkEl = document.getElementById("introInk");
+				const sweepRect = document.getElementById("introSweepRect");
+				const tipEl = document.getElementById("introTip");
+				const haloEl = document.getElementById("introHalo");
+				const sharpBox = document.getElementById("introSharpBox");
+				const blurBox = document.getElementById("introBlur");
+				const flyLayer = document.getElementById("introFlies");
+
+				// 萤火虫：桌面 7 只，手机 5 只
+				const flies = [];
+				const flyCount = window.matchMedia("(max-width: 700px)").matches ? 5 : 7;
+				for (let i = 0; i < flyCount; i++) {
+					const el = document.createElement("div");
+					el.className = "intro-fly";
+					el.style.left = 12 + Math.random() * 76 + "vw";
+					el.style.top = 14 + Math.random() * 66 + "vh";
+					el.style.animation =
+						"introDrift " +
+						(9 + Math.random() * 7).toFixed(2) +
+						"s ease-in-out " +
+						(-Math.random() * 6).toFixed(2) +
+						"s infinite";
+					flyLayer.appendChild(el);
+					flies.push({ el: el, at: 0.45 + (i / flyCount) * 0.3 });
+				}
+
+				// 时间轴（毫秒）：写 0–600 → 虫子 420–760 → 凝实 540–860 → 收焦 660–880 → 揭开 860–1060
+				const T = { sweep: [0, 600], fly: [420, 760], settle: [540, 860], focus: [660, 880], uncover: [860, 1060] };
+				const clamp01 = (v) => Math.min(1, Math.max(0, v));
+				const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+				const easeInOut = (t) => 0.5 - 0.5 * Math.cos(Math.PI * t); // 起笔收笔慢一点、中间匀，才有手写味
+				const seg = (t, ab) => clamp01((t - ab[0]) / (ab[1] - ab[0]));
+
+				let raf = 0;
+				let startedAt = 0;
+				let started = false;
+				let finished = false;
+				let inkWidth = 4200;
+
+				function tipAt(p) {
+					const f = p * (TIP.length - 1);
+					const i = Math.min(TIP.length - 2, Math.floor(f));
+					const k = f - i;
+					return [TIP[i][0] + (TIP[i + 1][0] - TIP[i][0]) * k, TIP[i][1] + (TIP[i + 1][1] - TIP[i][1]) * k];
+				}
+
+				function dropListeners() {
+					window.removeEventListener("click", skip);
+					window.removeEventListener("wheel", skip);
+					window.removeEventListener("keydown", skip);
+				}
+
+				function finish() {
+					if (finished) return;
+					finished = true;
+					cancelAnimationFrame(raf);
+					dropListeners();
+					root.remove(); // 站上本来就有一层常驻萤火虫，这块拿掉之后视觉接得上
+				}
+
+				function skip() {
+					if (finished) return;
+					finished = true;
+					cancelAnimationFrame(raf);
+					dropListeners();
+					root.remove();
+				}
+
+				function render(t) {
+					const sweep = easeInOut(seg(t, T.sweep));
+					sweepRect.setAttribute("width", (sweep * (inkWidth + 90)).toFixed(2));
+					const pt = tipAt(sweep);
+					tipEl.setAttribute("cx", pt[0].toFixed(2));
+					tipEl.setAttribute("cy", pt[1].toFixed(2));
+					tipEl.setAttribute("opacity", t > 0 && t < T.sweep[1] + 140 ? "1" : "0");
+
+					const settle = easeOut(seg(t, T.settle));
+					inkEl.setAttribute("opacity", (0.82 + 0.18 * settle).toFixed(3));
+					haloEl.setAttribute("opacity", (0.75 * settle).toFixed(3));
+
+					for (let i = 0; i < flies.length; i++) {
+						const shift = (flies[i].at - 0.45) * 500;
+						const a = seg(t, [T.fly[0] + shift, T.fly[1] + shift]);
+						flies[i].el.style.opacity = ((0.35 + 0.45 * a) * a).toFixed(3);
+					}
+
+					// 收焦：清晰层淡出 + 一点点推近，静态糊层淡入。
+					// 全程只动 opacity / transform（交给合成器），不动 blur，所以不会掉帧。
+					const fr = easeInOut(seg(t, T.focus));
+					blurBox.style.display = fr > 0 ? "block" : "none";
+					blurBox.style.opacity = fr.toFixed(3);
+					sharpBox.style.opacity = (1 - fr).toFixed(3);
+					sharpBox.style.transform = "scale(" + (1 + 0.03 * fr).toFixed(4) + ")";
+
+					const un = easeOut(seg(t, T.uncover));
+					root.style.opacity = (1 - un).toFixed(3);
+					if (un >= 1) finish();
+				}
+
+				function play() {
+					startedAt = performance.now();
+					const tick = (now) => {
+						if (finished) return;
+						const t = now - startedAt;
+						render(t);
+						if (!finished && t < T.uncover[1] + 60) raf = requestAnimationFrame(tick);
+					};
+					raf = requestAnimationFrame(tick);
+				}
+
+				function start() {
+					if (started || finished) return;
+					started = true;
+					window.clearTimeout(guard);
+					const box = inkEl.getBBox();
+					const inkLeft = box.x;
+					inkWidth = Math.max(1, box.width);
+					sweepRect.setAttribute("x", (inkLeft - 6).toFixed(2));
+					window.addEventListener("click", skip);
+					window.addEventListener("wheel", skip, { passive: true });
+					window.addEventListener("keydown", skip);
+					play();
+				}
+
+				// 兜底：1.2s 内还没能开写（字体迟迟不来之类），就把幕布撤掉，绝不让它挡着人
+				const guard = window.setTimeout(() => {
+					if (!started) root.remove();
+				}, 1200);
+
+				try {
+					// 等签名字体就位再开写（免得用兜底字体「写」一遍）；字体确实拿不到就不播
+					Promise.resolve(document.fonts && document.fonts.ready)
+						.then(() => document.fonts.load('1000px "Allura Signature"'))
+						.then(() => {
+							if (document.fonts.check('1000px "Allura Signature"')) start();
+							else root.remove();
+						})
+						.catch(() => root.remove());
+				} catch {
+					root.remove();
+				}
+			})();
+		</script>
+
 		<ConfigCarrier></ConfigCarrier>
 		<slot />
 
