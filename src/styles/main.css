@@ -311,29 +311,20 @@ main :is(h1, h2, h3, h4, h5, h6) {
     }
 }
 
-/* 整页的淡入淡出：旧页快一点退，新页从下往上轻轻浮进来 */
+/* 整页：旧页快速退场，新页直接以实底出现。
+   这里故意不给新页做位移和淡入——两层同时"错位淡入淡出"时，交界处会互相透出一条
+   发白的横带（就是主人看到的那条"白标"）。旧页在 150ms 内退干净，观感是干净的溶解。 */
 ::view-transition-old(root) {
-    animation: vt-root-out 160ms ease-in both;
+    animation: vt-root-out 150ms ease-out both;
 }
 
 ::view-transition-new(root) {
-    animation: vt-root-in 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: none;
 }
 
 @keyframes vt-root-out {
     to {
         opacity: 0;
-    }
-}
-
-@keyframes vt-root-in {
-    from {
-        opacity: 0;
-        transform: translateY(14px);
-    }
-    to {
-        opacity: 1;
-        transform: none;
     }
 }
 
