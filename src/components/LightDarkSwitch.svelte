@@ -12,7 +12,11 @@ import { onMount } from "svelte";
 import type { LIGHT_DARK_MODE } from "@/types/config.ts";
 
 const seq: LIGHT_DARK_MODE[] = [LIGHT_MODE, DARK_MODE, AUTO_MODE];
-let mode: LIGHT_DARK_MODE = $state(AUTO_MODE);
+// NOTE: on purpose this component stays in legacy (non-runes) Svelte mode.
+// A runes component that never calls $props() gets typed props of
+// Record<string, never>, which makes Astro reject the client:only directive
+// on it (ts2322, reported from Navbar.astro). Plain let is reactive as well.
+let mode: LIGHT_DARK_MODE = AUTO_MODE;
 
 onMount(() => {
 	mode = getStoredTheme();

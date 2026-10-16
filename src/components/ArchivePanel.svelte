@@ -19,7 +19,8 @@ interface Post {
 	data: {
 		title: string;
 		tags: string[];
-		category?: string;
+		// content schema is .nullable(), so a missing category comes through as null
+		category?: string | null;
 		published: Date;
 	};
 }
