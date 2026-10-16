@@ -29,7 +29,24 @@ export const siteConfig: SiteConfig = {
 		enable: true,
 		depth: 2,
 	},
-	favicon: [],
+	favicon: [
+		{
+			src: "/favicon/avatar-32.png",
+			sizes: "32x32",
+		},
+		{
+			src: "/favicon/avatar-128.png",
+			sizes: "128x128",
+		},
+		{
+			src: "/favicon/avatar-180.png",
+			sizes: "180x180",
+		},
+		{
+			src: "/favicon/avatar-192.png",
+			sizes: "192x192",
+		},
+	],
 };
 
 export const navBarConfig: NavBarConfig = {
