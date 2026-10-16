@@ -38,7 +38,7 @@ export default defineConfig({
 			animationClass: "transition-swup-", // see https://swup.js.org/options/#animationselector
 			// the default value `transition-` cause transition delay
 			// when the Tailwind class `transition-all` is used
-			containers: ["main", "#toc"],
+			containers: ["main", "#sidebar"], // #sidebar 里住着头像卡与文章目录，要跟着客户端跳转一起换
 			smoothScrolling: true,
 			cache: true,
 			preload: true,

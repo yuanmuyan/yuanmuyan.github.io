@@ -3,6 +3,8 @@ import type { MarkdownHeading } from "astro";
 import Categories from "./Categories.astro";
 import Profile from "./Profile.astro";
 import Tag from "./Tags.astro";
+import TOC from "./TOC.astro";
+import WidgetLayout from "./WidgetLayout.astro";
 
 interface Props {
 	class?: string;
@@ -10,15 +12,34 @@ interface Props {
 }
 
 const className = Astro.props.class;
+const { headings = [] } = Astro.props;
 // 头像卡只在主页（含 /2/ 这类分页）显示；文章、归档、关于、友链页只留分类与标签
 const isHome = /^\/\d*\/?$/.test(Astro.url.pathname);
+// 文章页把目录放进侧栏（宽屏之外也看得见）；TOC.astro 自己只在 /posts/ 下渲染内容
+const isPostRoute = Astro.url.pathname.startsWith("/posts/");
 ---
 <div id="sidebar" class:list={[className, "w-full"]}>
     {isHome && <div class="flex flex-col w-full gap-4 mb-4">
         <Profile></Profile>
     </div>}
     <div id="sidebar-sticky" class="transition-all duration-700 flex flex-col w-full gap-4 top-4 sticky top-4">
+        {isPostRoute && <WidgetLayout id="post-toc" name="目录" class="onload-animation" style="animation-delay: 100ms">
+            <div id="toc-inner-wrapper" class="relative w-full max-h-[50vh] overflow-y-auto overflow-x-hidden hide-scrollbar">
+                <div id="toc" class="w-full transition-swup-fade">
+                    <TOC headings={headings}></TOC>
+                </div>
+            </div>
+        </WidgetLayout>}
         <Categories class="onload-animation" style="animation-delay: 150ms"></Categories>
         <Tag class="onload-animation" style="animation-delay: 200ms"></Tag>
     </div>
 </div>
+
+<script>
+    // swup 会逐页替换 #sidebar：入场动画只在首次加载播放，免得每次点链接侧栏都闪一下
+    document.addEventListener("swup:content:replace", () => {
+        document.querySelectorAll("#sidebar .onload-animation").forEach((el) => {
+            el.classList.remove("onload-animation");
+        });
+    });
+</script>
