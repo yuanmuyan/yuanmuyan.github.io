@@ -289,6 +289,46 @@ const bannerOffset =
 					},
 					true,
 				);
+
+				// 手机没有 hover，上面那套预取用不上；页面彻底空下来之后，
+				// 悄悄把前两篇文章的 HTML 先下到缓存里（只下 HTML，图片照样点开才加载）。
+				// 省流开着、或者网络是 2G/3G 的时候不做，免得偷跑流量。
+				const idlePrefetch = () => {
+					const conn = navigator.connection;
+					if (conn && (conn.saveData || /^([23]g|slow-2g)$/.test(conn.effectiveType || ""))) return;
+					const hrefs = [];
+					document.querySelectorAll('a[href^="/posts/"]').forEach((a) => {
+						if (hrefs.length >= 2) return;
+						if (a.target === "_blank" || a.hasAttribute("download")) return;
+						if (a.hasAttribute("data-no-swup")) return;
+						let url;
+						try {
+							url = new URL(a.getAttribute("href"), location.href);
+						} catch {
+							return;
+						}
+						if (url.origin !== location.origin) return;
+						if (prefetched.has(url.href) || hrefs.indexOf(url.href) !== -1) return;
+						hrefs.push(url.href);
+					});
+					hrefs.forEach((href) => {
+						prefetched.add(href);
+						const tag = document.createElement("link");
+						tag.rel = "prefetch";
+						tag.as = "document";
+						tag.href = href;
+						document.head.appendChild(tag);
+					});
+				};
+				const startIdlePrefetch = () => {
+					if (typeof window.requestIdleCallback === "function") {
+						window.requestIdleCallback(idlePrefetch, { timeout: 4000 });
+					} else {
+						window.setTimeout(idlePrefetch, 2500);
+					}
+				};
+				if (document.readyState === "complete") startIdlePrefetch();
+				else window.addEventListener("load", startIdlePrefetch, { once: true });
 			})();
 		</script>
 
