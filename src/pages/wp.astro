@@ -1,0 +1,86 @@
+---
+import { getCollection } from "astro:content";
+import MainGridLayout from "../layouts/MainGridLayout.astro";
+import { formatDateToYYYYMMDD } from "../utils/date-utils";
+
+// 自动收集所有打了 WP 标签的文章（草稿在生产环境自动排除），
+// 再把每篇正文里的小节标题抽出来做「题目索引」。
+const allPosts = await getCollection("posts", ({ data }) => {
+	return import.meta.env.PROD ? data.draft !== true : true;
+});
+
+const wpPosts = allPosts
+	.filter((post) => (post.data.tags ?? []).includes("WP"))
+	.sort(
+		(a, b) =>
+			new Date(b.data.published).valueOf() - new Date(a.data.published).valueOf(),
+	);
+
+const groups = await Promise.all(
+	wpPosts.map(async (post) => {
+		const { headings } = await post.render();
+		return {
+			slug: post.slug,
+			title: post.data.title,
+			date: post.data.published,
+			description: post.data.description,
+			category: post.data.category,
+			headings: headings.filter((h) => h.depth === 2 || h.depth === 3),
+		};
+	}),
+);
+---
+
+<MainGridLayout
+	title="WP 索引"
+	description="我写过的 Writeup 总目录，按文章列出每道题，点一下就跳过去。"
+>
+	<div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
+		<div class="card-base z-10 px-9 py-6 relative w-full">
+			<div class="text-2xl font-bold text-[var(--primary)] mb-3">WP 索引</div>
+			<div class="text-black/50 dark:text-white/50 mb-6">
+				这里自动收集了所有打了 WP 标签的文章，并列出每篇正文里的小节。点文章标题看全文，点小节直接跳到那一段。
+			</div>
+
+			{
+				groups.length === 0 && (
+					<div class="text-black/50 dark:text-white/50">还没有打了 WP 标签的文章。</div>
+				)
+			}
+
+			{
+				groups.map((group) => (
+					<section class="mb-8 last:mb-0">
+						<a
+							href={`/posts/${group.slug}/`}
+							class="text-xl font-bold text-black dark:text-white transition hover:text-[var(--primary)]"
+						>
+							{group.title}
+						</a>
+						<div class="text-sm text-black/40 dark:text-white/40 mt-1">
+							{formatDateToYYYYMMDD(group.date)}
+							{group.category ? ` · ${group.category}` : ""}
+						</div>
+						{group.description && (
+							<div class="text-sm text-black/50 dark:text-white/50 mt-2">
+								{group.description}
+							</div>
+						)}
+						<ul class="list-disc pl-6 space-y-1 mt-3">
+							{group.headings.map((heading) => (
+								<li class={heading.depth === 3 ? "ml-5" : ""}>
+									<a
+										href={`/posts/${group.slug}/#${heading.slug}`}
+										class="text-black/70 dark:text-white/70 transition hover:text-[var(--primary)]"
+									>
+										{heading.text}
+									</a>
+								</li>
+							))}
+						</ul>
+					</section>
+				))
+			}
+		</div>
+	</div>
+</MainGridLayout>
