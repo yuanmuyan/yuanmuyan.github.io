@@ -2,8 +2,12 @@
 html.is-changing .transition-swup-fade {
     @apply transition-all duration-200
 }
+/* 换页时只让内容淡一下，**绝不下移**：
+   下移 1rem 会让卡片顶边让出一条缝（#swup-container 带 overflow-hidden，移出去的部分被裁掉），
+   缝里露出后面的壁纸 —— 看着就是一条横着的浅色带子（主人报的"白条"）。
+   opacity 那一小段淡化留着，换页才不至于"啪"地一下。 */
 html.is-animating .transition-swup-fade {
-    @apply opacity-0 translate-y-4
+    @apply opacity-0
 }
 
 /* Fade-in animations for components */
