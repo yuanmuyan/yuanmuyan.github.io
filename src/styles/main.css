@@ -150,3 +150,23 @@
     }
   }
 }
+
+/* ===== 全站背景图：静态高清流萤 =====
+   想换图 / 改深浅，只动下面这两个变量即可 */
+:root {
+    --site-bg: url('/images/firefly-hd.webp');
+    --site-bg-opacity: 0.6;
+}
+
+html::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image: var(--site-bg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: var(--site-bg-opacity);
+}
