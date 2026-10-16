@@ -74,6 +74,11 @@ export const profileConfig: ProfileConfig = {
 			icon: "fa6-brands:github",
 			url: "https://github.com/yuanmuyan",
 		},
+		{
+			name: "Email",
+			icon: "fa6-solid:envelope",
+			url: "mailto:136919313@qq.com",
+		},
 	],
 };
 
