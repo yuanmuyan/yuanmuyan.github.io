@@ -281,24 +281,26 @@ main :is(h1, h2, h3, h4, h5, h6) {
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* 旧的一侧（卡片上的封面）直接消失，不做淡出：新旧两层只要同时半透明地重叠，
+   就会把图/字洗成一条发白的横带（主人报的"白标"）。让新的一侧在变形的框里长出来就够好看了。 */
+::view-transition-old(post-cover) {
+    opacity: 0;
+    animation: none;
+}
+
 ::view-transition-group(post-title) {
     animation-duration: 320ms;
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* 旧标题同样直接消失（淡出会让两行字在半透明状态叠在一起，看着就是一条发白的带子） */
 ::view-transition-old(post-title) {
-    animation: vt-title-out 150ms ease-out both;
+    opacity: 0;
+    animation: none;
 }
 
 ::view-transition-new(post-title) {
     animation: vt-title-in 230ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@keyframes vt-title-out {
-    to {
-        opacity: 0;
-        transform: translateY(-6px);
-    }
 }
 
 @keyframes vt-title-in {
@@ -308,21 +310,17 @@ main :is(h1, h2, h3, h4, h5, h6) {
     }
 }
 
-/* 整页：旧页快速退场，新页直接以实底出现。
-   这里故意不给新页做位移和淡入——两层同时"错位淡入淡出"时，交界处会互相透出一条
-   发白的横带（就是主人看到的那条"白标"）。旧页在 150ms 内退干净，观感是干净的溶解。 */
+/* 整页：旧页**直接消失**、新页以实底出现，两边都不做淡入淡出。
+   原来给旧页做 150ms 淡出，那 150ms 里新旧两层各占一半透明度叠着 ⇒ 文字被洗白，
+   就是你看到的那条"白标"。现在过渡期间永远只有一层在显示，观感交给共享元素
+   （封面/标题在变形的框里长大）来撑，不可能再洗白。 */
 ::view-transition-old(root) {
-    animation: vt-root-out 150ms ease-out both;
+    opacity: 0;
+    animation: none;
 }
 
 ::view-transition-new(root) {
     animation: none;
-}
-
-@keyframes vt-root-out {
-    to {
-        opacity: 0;
-    }
 }
 
 /* 交给 View Transition 的这段时间里，别让 swup 的容器淡入再演一遍（否则会双重动画） */
