@@ -262,12 +262,19 @@ main :is(h1, h2, h3, h4, h5, h6) {
     }
 }
 
-/* ===== 换页动画：共享元素放大（列表卡片封面 → 文章头图） =====
-   JS 在点击时给被点的那张卡片的封面临时挂上 view-transition-name: post-cover，
-   文章页的 #post-cover 用的是同一个名字 ⇒ 浏览器会把封面从卡片的位置连续放大成文章头图。
+/* ===== 换页动画：共享元素放大 =====
+   两种模式，JS 在点击时按卡片有没有封面自己挑：
+   ① 有封面：给那张卡片的封面临时挂 view-transition-name: post-cover，文章页的 #post-cover
+      用同一个名字 ⇒ 封面从卡片的位置连续放大成文章头图；
+   ② 没封面（文章 frontmatter 里没有 image，卡片只有标题）：改成给卡片标题挂 post-title、
+      文章页的 #post-title 同名字 ⇒ 标题长大成文章大标题。
    不支持 View Transitions 的浏览器（Firefox）不会走到这里，行为跟以前一样。 */
 #post-cover {
     view-transition-name: post-cover;
+}
+
+#post-title {
+    view-transition-name: post-title;
 }
 
 ::view-transition-group(post-cover),
@@ -275,6 +282,33 @@ main :is(h1, h2, h3, h4, h5, h6) {
 ::view-transition-new(post-cover) {
     animation-duration: 480ms;
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+::view-transition-group(post-title) {
+    animation-duration: 450ms;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+::view-transition-old(post-title) {
+    animation: vt-title-out 200ms ease-out both;
+}
+
+::view-transition-new(post-title) {
+    animation: vt-title-in 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes vt-title-out {
+    to {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+}
+
+@keyframes vt-title-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
 }
 
 /* 整页的淡入淡出：旧页快一点退，新页从下往上轻轻浮进来 */
@@ -314,6 +348,9 @@ html.vt-running .transition-swup-fade {
     ::view-transition-group(post-cover),
     ::view-transition-old(post-cover),
     ::view-transition-new(post-cover),
+    ::view-transition-group(post-title),
+    ::view-transition-old(post-title),
+    ::view-transition-new(post-title),
     ::view-transition-old(root),
     ::view-transition-new(root) {
         animation-duration: 1ms;

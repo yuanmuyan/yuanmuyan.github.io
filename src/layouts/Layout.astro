@@ -294,29 +294,32 @@ const bannerOffset =
 						if (url.pathname === location.pathname && url.search === location.search) return;
 						if (!window.swup || typeof window.swup.navigate !== "function") return;
 
-						// 同一页面里同时只能有一个元素叫 post-cover，所以只给点中的这张卡片的封面挂名字
+						// 同一页面里同时只能有一个元素挂名字，所以只给「点中的这张卡片」里的元素挂
 						const card = link.closest(".card-base") || link.closest("article") || link.parentElement;
 						const cover = card ? card.querySelector(".vt-cover") : null;
+						// 卡片没有封面图（文章没配 image）就退一步：把卡片标题放大成文章大标题
+						const morph = cover || (card ? card.querySelector(".vt-title") : null);
+						const morphName = cover ? "post-cover" : "post-title";
 
 						event.preventDefault();
 						event.stopPropagation();
 						busy = true;
 						// swup 的 link:click 钩子被跳过了，把它这行副作用补上（内容入场延迟归零）
 						document.documentElement.style.setProperty("--content-delay", "0ms");
-						if (cover) cover.style.viewTransitionName = "post-cover";
+						if (morph) morph.style.viewTransitionName = morphName;
 						document.documentElement.classList.add("vt-running");
 						try {
 							const transition = document.startViewTransition(() =>
 								window.swup.navigate(url.href),
 							);
 							transition.finished.finally(() => {
-								if (cover) cover.style.viewTransitionName = "";
+								if (morph) morph.style.viewTransitionName = "";
 								document.documentElement.classList.remove("vt-running");
 								busy = false;
 							});
 						} catch (error) {
 							// VT 起不来（极少见）就退回普通导航，别让链接点不动
-							if (cover) cover.style.viewTransitionName = "";
+							if (morph) morph.style.viewTransitionName = "";
 							document.documentElement.classList.remove("vt-running");
 							busy = false;
 							window.swup.navigate(url.href);
