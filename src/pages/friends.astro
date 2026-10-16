@@ -75,8 +75,49 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
                 </a>
             </div>
 
-            <div class="mt-6 text-sm text-black/40 dark:text-white/40">
-                想交换友链？在 <a class="text-[var(--primary)] hover:underline" href="https://github.com/yuanmuyan" target="_blank" rel="noopener noreferrer">GitHub</a> 上找我就行。
+            <div class="mt-8 pt-6 border-t border-black/10 dark:border-white/10">
+                <div class="text-xl font-bold text-[var(--primary)] mb-2">求友链！</div>
+                <div class="text-sm text-black/60 dark:text-white/60 leading-relaxed">
+                    <p>不论大佬还是萌新，都欢迎来投友链~ 工具站也可以（原则上只收开源 / 免费的）。</p>
+                    <p class="mt-2">想换的话，在 <a class="text-[var(--primary)] hover:underline" href="https://github.com/yuanmuyan" target="_blank" rel="noopener noreferrer">GitHub</a> 上找我就行，麻烦把这四项一起发过来：</p>
+                    <ol class="list-decimal list-inside mt-3 space-y-1">
+                        <li><span class="font-bold">显示名称</span>：比如「XXX 的博客」</li>
+                        <li><span class="font-bold">一句话简介</span>：会显示在友链卡片上</li>
+                        <li><span class="font-bold">URL</span>：你的站点地址</li>
+                        <li><span class="font-bold">Icon</span>：建议方形，img 标签能显示的格式都行（也可以直接给图片链接）</li>
+                    </ol>
+                </div>
+
+                <div class="text-xl font-bold text-[var(--primary)] mt-6 mb-2">++ 我？</div>
+                <div class="text-sm text-black/60 dark:text-white/60">想在你的站点上加我（不是必须的啦），四项信息都在这儿：</div>
+                <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                    <div><span class="text-black/40 dark:text-white/40">名称　</span><span class="text-black dark:text-white">yuanmuyan</span></div>
+                    <div><span class="text-black/40 dark:text-white/40">简介　</span><span class="text-black dark:text-white">web 手一枚~，欢迎各位师傅的参观~</span></div>
+                    <div class="sm:col-span-2 break-all"><span class="text-black/40 dark:text-white/40">URL　　</span><span class="text-black dark:text-white">https://yuanmuyan.github.io/</span></div>
+                    <div class="sm:col-span-2 break-all"><span class="text-black/40 dark:text-white/40">Icon　　</span><span class="text-black dark:text-white">https://yuanmuyan.github.io/favicon/avatar-180.png</span></div>
+                </div>
+                <button id="copy-friend-info" type="button" class="mt-3 px-3 py-1.5 rounded-lg text-sm btn-regular transition active:scale-[0.98]">复制这四项</button>
+                <script is:inline>
+                    (() => {
+                        const btn = document.getElementById("copy-friend-info");
+                        if (!btn) return;
+                        const info = [
+                            "名称：yuanmuyan",
+                            "简介：web 手一枚~，欢迎各位师傅的参观~",
+                            "URL：https://yuanmuyan.github.io/",
+                            "Icon：https://yuanmuyan.github.io/favicon/avatar-180.png",
+                        ].join("\n");
+                        btn.addEventListener("click", async () => {
+                            try {
+                                await navigator.clipboard.writeText(info);
+                                btn.textContent = "已复制 ✓";
+                            } catch {
+                                btn.textContent = "复制失败，手动选一下吧";
+                            }
+                            setTimeout(() => (btn.textContent = "复制这四项"), 1600);
+                        });
+                    })();
+                </script>
             </div>
         </div>
     </div>
