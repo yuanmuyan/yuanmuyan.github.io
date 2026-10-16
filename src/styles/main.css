@@ -274,10 +274,13 @@ main :is(h1, h2, h3, h4, h5, h6) {
    导航」临时挂上、动画结束就摘掉。
    不支持 View Transitions 的浏览器（Firefox）不会走到这里，行为跟以前一样。 */
 
+/* 想把换页放慢看清：控制台粘一行
+   document.documentElement.style.setProperty('--vt-speed', '5')
+   就会慢 5 倍（想还原就把它设回 '1'）。 */
 ::view-transition-group(post-cover),
 ::view-transition-old(post-cover),
 ::view-transition-new(post-cover) {
-    animation-duration: 420ms;
+    animation-duration: calc(420ms * var(--vt-speed, 1));
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -289,7 +292,7 @@ main :is(h1, h2, h3, h4, h5, h6) {
 }
 
 ::view-transition-group(post-title) {
-    animation-duration: 320ms;
+    animation-duration: calc(320ms * var(--vt-speed, 1));
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -300,7 +303,7 @@ main :is(h1, h2, h3, h4, h5, h6) {
 }
 
 ::view-transition-new(post-title) {
-    animation: vt-title-in 230ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: vt-title-in calc(230ms * var(--vt-speed, 1)) cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @keyframes vt-title-in {
@@ -319,8 +322,18 @@ main :is(h1, h2, h3, h4, h5, h6) {
     animation: none;
 }
 
+/* 新页面从"轻微发虚"里凝实出来：只动 filter，不动 opacity、也不动位移——
+   透明度会让新旧两层叠白，位移会在边缘露出底下的白（那才是"白条"的来源）。
+   filter 只把这一层（连同快照里的壁纸）暂时糊一下，既不露底也不闪白，
+   顺带把任何一帧的硬切换抹匀 ⇒ 观感从"啪一下"变成"化开"。 */
 ::view-transition-new(root) {
-    animation: none;
+    animation: vt-root-settle calc(320ms * var(--vt-speed, 1)) cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes vt-root-settle {
+    from {
+        filter: blur(5px) saturate(0.92);
+    }
 }
 
 /* 交给 View Transition 的这段时间里，别让 swup 的容器淡入再演一遍（否则会双重动画） */
