@@ -325,25 +325,19 @@ main :is(h1, h2, h3, h4, h5, h6) {
     animation: none;
 }
 
-/* 新页面从"轻微发虚"里凝实出来：只动 filter，不动 opacity、也不动位移——
-   透明度会让新旧两层叠白，位移会在边缘露出底下的白（那才是"白条"的来源）。
-   filter 只把这一层（连同快照里的壁纸）暂时糊一下，既不露底也不闪白，
-   顺带把任何一帧的硬切换抹匀 ⇒ 观感从"啪一下"变成"化开"。 */
+/* 这儿曾经给整页快照做过 blur + saturate 的"凝实"，想抹匀硬切换；主人实测一眼看出
+   "色差明显""像整页透明度被调低"——快照上的 filter 是会被看见的，所以整页保持
+   "直接切"：不糊、不降饱和，只让两个页面自己换，观感交给共享元素去撑。 */
 ::view-transition-new(root) {
-    animation: vt-root-settle calc(400ms * var(--vt-speed, 1)) cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: none;
 }
 
-@keyframes vt-root-settle {
-    from {
-        filter: blur(8px) saturate(0.9);
-    }
-}
-
-/* 换页这几百毫秒里先把毛玻璃"变实"：快照抓到的是不透明的实底卡片，等 vt-running 摘掉后，
-   再由 .card-base 自己的 transition-duration 缓缓化回 58% 的毛玻璃。
-   主人说的"背景由实到虚像卡出来的"，症结就是这个密度差在一帧里跳变 —— 现在它是"化"开的。 */
+/* 换页这几百毫秒里把毛玻璃稍微"密"一点点（66%，平时是 58%）——只是让到达的新页面
+   别第一眼太"虚"，后面的壁纸仍然看得见（透明度调高≠不透明）。
+   等 vt-running 摘掉后，再由 .card-base 自己的 transition-duration 缓缓化回 58%。
+   力度刻意留得很小：太不透明会像整页被糊成一块，主人一眼就看得出来。 */
 html.vt-running {
-    --glass-card: 100%;
+    --glass-card: 66%;
 }
 
 /* 交给 View Transition 的这段时间里，别让 swup 的容器淡入再演一遍（否则会双重动画） */
