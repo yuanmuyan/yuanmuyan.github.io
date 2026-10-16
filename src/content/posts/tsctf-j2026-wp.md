@@ -53,7 +53,7 @@ draft: false
 ![图 1](/images/tsctf-2026/09.webp)  
 插入hex值的行
 在E2位置使用
-```xlsx
+```text
 =IF(B2=B3,D2&D3,"")
 ```
 ![图 2](/images/tsctf-2026/10.webp)  
