@@ -167,7 +167,17 @@ const bannerOffset =
 				window.__heroFxStarted = true;
 
 				// ===== 想换台词 / 句子，改这两处就行 =====
-				const TYPED = ["Little Steps of Growth", "web手一枚~", "欢迎各位师傅的参观~", "yuanmuyan"];
+				// 打字机轮着打的话：前四句是他的身份话，后四句是他 m02515 亲口给的碎碎念（原话一字不改）
+				const TYPED = [
+					"Little Steps of Growth",
+					"web手一枚~",
+					"欢迎各位师傅的参观~",
+					"yuanmuyan",
+					"或许世界真的是个巨大的草台班子？",
+					"原来是这样解决的嘛？！",
+					"嗯？又是哪报错了······让我康康······",
+					"这样改真的能修好嘛······",
+				];
 				const QUOTES = [
 					"路漫漫其修远兮，吾将上下而求索。",
 					"海内存知己，天涯若比邻。",
@@ -175,11 +185,6 @@ const bannerOffset =
 					"长风破浪会有时，直挂云帆济沧海。",
 					"不畏浮云遮望眼，只缘身在最高层。",
 					"山有木兮木有枝，心悦君兮君不知。",
-					// 主人自己的碎碎念，原话保留
-					"或许世界真的是个巨大的草台班子？",
-					"原来是这样解决的嘛？！",
-					"嗯？又是哪报错了······让我康康······",
-					"这样改真的能修好嘛······",
 				];
 				const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -212,7 +217,7 @@ const bannerOffset =
 						textEl.textContent = line.slice(0, pos);
 						if (!deleting && pos >= line.length) {
 							deleting = true;
-							typing = setTimeout(tick, 2200); // 打完停一会儿
+							typing = setTimeout(tick, 1600); // 打完停一会儿（句子多了，停短点免得轮一圈太久）
 						} else if (deleting && pos <= 0) {
 							deleting = false;
 							i++;
