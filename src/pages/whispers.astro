@@ -1,0 +1,382 @@
+---
+import {
+	whisperDailyLimit,
+	whisperRarityWeight,
+	whispers,
+} from "../data/whispers";
+import MainGridLayout from "../layouts/MainGridLayout.astro";
+---
+
+<MainGridLayout title="废纸堆" description="说不定在某个角落里藏了我的悄悄话？">
+	<div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
+		<div class="card-base z-10 px-6 md:px-9 py-6 relative w-full">
+			<div class="text-2xl font-bold text-[var(--primary)] mb-2">废纸堆</div>
+			<div class="text-black/50 dark:text-white/50 mb-6">
+				说不定在某个角落里藏了我的悄悄话？点一下卡片抽一张，每天 {whisperDailyLimit} 次。
+			</div>
+
+			<div class="wisp-stage">
+				<button id="wisp-card" class="wisp-card" type="button" aria-label="抽一张悄悄话">
+					<div class="wisp-inner">
+						<div class="wisp-face wisp-back">？</div>
+						<div class="wisp-face wisp-front">
+							<div id="wisp-rarity" class="wisp-rarity"></div>
+							<div id="wisp-text" class="wisp-text"></div>
+						</div>
+					</div>
+				</button>
+			</div>
+
+			<div class="flex flex-wrap items-center gap-3 mb-6">
+				<button id="wisp-draw" class="btn-regular rounded-lg h-10 px-5 font-bold" type="button">抽一张</button>
+				<span id="wisp-hint" class="text-sm text-black/50 dark:text-white/50"></span>
+			</div>
+
+			<div class="text-sm font-bold mb-2">
+				已收集 <span id="wisp-count">0</span> / <span id="wisp-total">0</span>
+			</div>
+			<div id="wisp-collection" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
+
+			<noscript>
+				<div class="text-sm text-black/50 dark:text-white/50 mt-4">这个角落需要一点 JavaScript 才能翻开~</div>
+			</noscript>
+
+			<button id="wisp-reset" class="text-xs underline opacity-40 mt-5" type="button">（清空我的收集记录）</button>
+		</div>
+	</div>
+</MainGridLayout>
+
+<style is:global>
+	.wisp-stage {
+		margin-bottom: 1.25rem;
+	}
+
+	.wisp-card {
+		display: block;
+		width: 100%;
+		max-width: 30rem;
+		min-height: 11rem;
+		cursor: pointer;
+		perspective: 1000px;
+	}
+
+	.wisp-inner {
+		position: relative;
+		width: 100%;
+		min-height: 11rem;
+		transform-style: preserve-3d;
+		transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.wisp-card.flipped .wisp-inner {
+		transform: rotateY(180deg);
+	}
+
+	.wisp-face {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		gap: 0.5rem;
+		padding: 1.25rem 1.5rem;
+		border-radius: var(--radius-large, 1rem);
+		backface-visibility: hidden;
+		-webkit-backface-visibility: hidden;
+	}
+
+	.wisp-back {
+		align-items: center;
+		font-size: 2rem;
+		color: color-mix(in srgb, var(--primary) 65%, transparent);
+		background: color-mix(in srgb, var(--card-bg) 62%, transparent);
+		border: 1px dashed color-mix(in srgb, var(--primary) 45%, transparent);
+	}
+
+	.wisp-front {
+		transform: rotateY(180deg);
+		background: color-mix(in srgb, var(--card-bg) 88%, transparent);
+		border: 1px solid color-mix(in srgb, var(--wisp-color, var(--primary)) 45%, transparent);
+	}
+
+	.wisp-rarity {
+		font-size: 0.75rem;
+		font-weight: 700;
+		letter-spacing: 0.1em;
+		color: var(--wisp-color, var(--primary));
+	}
+
+	.wisp-text {
+		font-size: 1.05rem;
+		line-height: 1.75;
+	}
+
+	.wisp-card.shaking {
+		animation: wisp-shake 0.4s ease-in-out;
+	}
+
+	@keyframes wisp-shake {
+		0%,
+		100% {
+			transform: translateX(0);
+		}
+		25% {
+			transform: translateX(-6px) rotate(-1.2deg);
+		}
+		75% {
+			transform: translateX(6px) rotate(1.2deg);
+		}
+	}
+
+	.wisp-dot {
+		position: fixed;
+		width: 0.85rem;
+		height: 0.85rem;
+		border-radius: 9999px;
+		cursor: pointer;
+		z-index: 30;
+		background: radial-gradient(circle, #fff 0%, var(--primary) 45%, transparent 72%);
+		box-shadow: 0 0 16px 6px color-mix(in srgb, var(--primary) 55%, transparent);
+		animation: wisp-pulse 1.8s ease-in-out infinite;
+	}
+
+	@keyframes wisp-pulse {
+		0%,
+		100% {
+			transform: scale(0.85);
+			opacity: 0.65;
+		}
+		50% {
+			transform: scale(1.15);
+			opacity: 1;
+		}
+	}
+
+	.wisp-slot {
+		min-height: 3.5rem;
+		padding: 0.6rem 0.75rem;
+		border-radius: 0.75rem;
+		font-size: 0.8rem;
+		line-height: 1.5;
+		background: color-mix(in srgb, var(--card-bg) 55%, transparent);
+		border: 1px solid color-mix(in srgb, var(--primary) 16%, transparent);
+	}
+
+	.wisp-slot[data-rarity="稀有"] {
+		border-color: #4f9ec4;
+	}
+
+	.wisp-slot[data-rarity="传说"] {
+		border-color: #c9a227;
+	}
+
+	.wisp-slot.locked {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 1.1rem;
+		opacity: 0.4;
+	}
+</style>
+
+<script is:inline define:vars={{ whispers, whisperRarityWeight, whisperDailyLimit }}>
+	(function () {
+		const STORE_KEY = "yuanmuyan-wisp-v1";
+		const RARITY_COLOR = { 普通: "#8ab4a8", 稀有: "#4f9ec4", 传说: "#c9a227" };
+
+		const card = document.getElementById("wisp-card");
+		const drawBtn = document.getElementById("wisp-draw");
+		const hint = document.getElementById("wisp-hint");
+		const rarityEl = document.getElementById("wisp-rarity");
+		const textEl = document.getElementById("wisp-text");
+		const countEl = document.getElementById("wisp-count");
+		const totalEl = document.getElementById("wisp-total");
+		const collectionEl = document.getElementById("wisp-collection");
+		const resetBtn = document.getElementById("wisp-reset");
+
+		if (!card || !drawBtn || !hint || !rarityEl || !textEl || !countEl || !totalEl || !collectionEl) {
+			return;
+		}
+
+		const unlimited = new URLSearchParams(location.search).has("test");
+
+		function todayKey() {
+			const d = new Date();
+			const m = String(d.getMonth() + 1).padStart(2, "0");
+			const day = String(d.getDate()).padStart(2, "0");
+			return d.getFullYear() + "-" + m + "-" + day;
+		}
+
+		function msUntilTomorrow() {
+			const now = new Date();
+			const next = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+			return next.getTime() - now.getTime();
+		}
+
+		function loadState() {
+			let saved = null;
+			try {
+				saved = JSON.parse(localStorage.getItem(STORE_KEY) || "null");
+			} catch {
+				saved = null;
+			}
+			const state = saved && typeof saved === "object" ? saved : {};
+			if (!state.drawn || typeof state.drawn !== "object") {
+				state.drawn = {};
+			}
+			if (state.day !== todayKey()) {
+				state.day = todayKey();
+				state.pulls = 0;
+			}
+			if (typeof state.pulls !== "number") {
+				state.pulls = 0;
+			}
+			return state;
+		}
+
+		let state = loadState();
+
+		function saveState() {
+			try {
+				localStorage.setItem(STORE_KEY, JSON.stringify(state));
+			} catch {
+				// 隐私模式下写不进去也没关系，就当这次是白抽
+			}
+		}
+
+		function rarityOf(weight) {
+			const rarities = Object.keys(weight);
+			let total = 0;
+			for (const r of rarities) {
+				total += weight[r];
+			}
+			let roll = Math.random() * total;
+			for (const r of rarities) {
+				roll -= weight[r];
+				if (roll <= 0) {
+					return r;
+				}
+			}
+			return rarities[0];
+		}
+
+		function pickWhisper() {
+			const rarity = rarityOf(whisperRarityWeight);
+			const sameRarity = whispers.filter((w) => w.rarity === rarity);
+			const fresh = sameRarity.filter((w) => !state.drawn[w.id]);
+			const pool = fresh.length > 0 ? fresh : sameRarity.length > 0 ? sameRarity : whispers;
+			return pool[Math.floor(Math.random() * pool.length)];
+		}
+
+		function renderCollection() {
+			totalEl.textContent = String(whispers.length);
+			countEl.textContent = String(Object.keys(state.drawn).length);
+			collectionEl.innerHTML = "";
+			for (const w of whispers) {
+				const slot = document.createElement("div");
+				const drawn = Boolean(state.drawn[w.id]);
+				slot.className = drawn ? "wisp-slot" : "wisp-slot locked";
+				slot.dataset.rarity = w.rarity;
+				if (drawn) {
+					slot.textContent = w.text;
+					slot.title = w.rarity;
+				} else {
+					slot.textContent = "？";
+				}
+				collectionEl.appendChild(slot);
+			}
+		}
+
+		function showHint(text) {
+			hint.textContent = text;
+		}
+
+		function reveal(w, fromCorner) {
+			state.drawn[w.id] = (state.drawn[w.id] || 0) + 1;
+			saveState();
+			card.style.setProperty("--wisp-color", RARITY_COLOR[w.rarity] || "");
+			rarityEl.textContent = w.rarity;
+			textEl.textContent = w.text;
+			card.classList.add("flipped");
+			renderCollection();
+			if (fromCorner) {
+				showHint("角落里捡到一条悄悄话~");
+			} else if (unlimited) {
+				showHint("测试模式：随便抽（URL 去掉 ?test=1 就恢复正常）");
+			} else if (state.pulls >= whisperDailyLimit) {
+				showHint("今天抽过啦，明天再来");
+			} else {
+				showHint("再抽 " + (whisperDailyLimit - state.pulls) + " 次就要等明天了");
+			}
+		}
+
+		function draw() {
+			if (card.classList.contains("shaking")) {
+				return;
+			}
+			if (!unlimited && state.pulls >= whisperDailyLimit) {
+				const ms = msUntilTomorrow();
+				const hours = Math.floor(ms / 3600000);
+				const minutes = Math.floor((ms % 3600000) / 60000);
+				showHint("今天的悄悄话翻完啦，" + hours + " 小时 " + minutes + " 分后再来~");
+				return;
+			}
+			state.pulls += 1;
+			state.day = todayKey();
+			saveState();
+			card.classList.remove("flipped");
+			card.classList.add("shaking");
+			setTimeout(function () {
+				card.classList.remove("shaking");
+				reveal(pickWhisper(), false);
+			}, 420);
+		}
+
+		card.addEventListener("click", draw);
+		drawBtn.addEventListener("click", draw);
+
+		if (resetBtn) {
+			resetBtn.addEventListener("click", function () {
+				if (!window.confirm("清空这份收集记录？")) {
+					return;
+				}
+				state = { drawn: {}, day: todayKey(), pulls: 0 };
+				localStorage.removeItem(STORE_KEY);
+				card.classList.remove("flipped");
+				rarityEl.textContent = "";
+				textEl.textContent = "";
+				showHint("");
+				renderCollection();
+			});
+		}
+
+		// 角落里的那颗光点：偶尔出现，点到就白送一条
+		if (Math.random() < 0.35) {
+			const dot = document.createElement("div");
+			dot.className = "wisp-dot";
+			dot.title = "……？";
+			const corners = [
+				{ right: "2.5rem", bottom: "6rem" },
+				{ left: "1.5rem", bottom: "6rem" },
+				{ right: "2.5rem", top: "6rem" },
+				{ left: "1.5rem", top: "6rem" },
+			];
+			const corner = corners[Math.floor(Math.random() * corners.length)];
+			for (const key of Object.keys(corner)) {
+				dot.style[key] = corner[key];
+			}
+			dot.addEventListener("click", function () {
+				const fresh = whispers.filter((w) => !state.drawn[w.id]);
+				const pool = fresh.length > 0 ? fresh : whispers;
+				dot.remove();
+				reveal(pool[Math.floor(Math.random() * pool.length)], true);
+			});
+			document.body.appendChild(dot);
+		}
+
+		renderCollection();
+		if (!unlimited && state.pulls >= whisperDailyLimit) {
+			showHint("今天的悄悄话翻完啦，明天再来~");
+		}
+	})();
+</script>
