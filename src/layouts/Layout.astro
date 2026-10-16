@@ -664,7 +664,8 @@ const bannerOffset =
 					// banner 上还是流萤：大一点、亮一点、慢慢飘
 					banner: { max: 46, density: 20000, alpha: 0.9, rMin: 1.5, rMax: 3.2, glow: 8.5, speed: 0.8 },
 					// 全站背景改成「星空」：点更小更暗、密度高得多 —— 每帧绘制量反而更低（光斑面积小了）
-					ambient: { max: 260, density: 6000, alpha: 0.5, rMin: 0.7, rMax: 1.6, glow: 4, speed: 0.35, drift: 0.05, rise: 0.35 },
+					// max 是给 4K 那种大屏兜底的上限；密度按面积算，不设上限会让每帧的渐变数量爆炸
+					ambient: { max: 1200, density: 3000, alpha: 0.5, rMin: 0.7, rMax: 1.6, glow: 4, speed: 0.35, drift: 0.05, rise: 0.35 },
 					drift: 0.14,
 					pointer: { r: 88, alpha: 0.42, ease: 0.22, color: [[104, 226, 212], [205, 255, 248]] },
 				};
@@ -701,8 +702,8 @@ const bannerOffset =
 						canvas.width = Math.round(w * dpr);
 						canvas.height = Math.round(h * dpr);
 						ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-						// 小屏（手机）只给 60%：太密会显得脏，也省电
-						const scale = w < 800 ? 0.6 : 1;
+						// 小屏（手机）按等效 4500 的密度（3000 / 4500 = 2/3）：小屏太密会显得脏，也省电
+						const scale = w < 800 ? 2 / 3 : 1;
 						const n = Math.max(6, Math.min(opts.max, Math.round(((w * h) / opts.density) * scale)));
 						while (layer.ps.length > n) layer.ps.pop();
 						while (layer.ps.length < n) layer.ps.push(spawn());
