@@ -8,6 +8,9 @@
         backdrop-filter: blur(var(--glass-blur, 16px)) saturate(1.7);
         -webkit-backdrop-filter: blur(var(--glass-blur, 16px)) saturate(1.7);
         box-shadow: 0 0 0 1px var(--glass-border);
+        /* 比 @apply transition 默认的 150ms 长一些：换页结束时毛玻璃从"实底"化回 58%，
+           这段"由实到虚"要看得见但又不拖沓 */
+        transition-duration: 380ms;
     }
     h1, h2, h3, h4, h5, h6, p, a, span, li, ul, ol, blockquote, code, pre, table, th, td, strong {
         @apply transition;
@@ -327,13 +330,20 @@ main :is(h1, h2, h3, h4, h5, h6) {
    filter 只把这一层（连同快照里的壁纸）暂时糊一下，既不露底也不闪白，
    顺带把任何一帧的硬切换抹匀 ⇒ 观感从"啪一下"变成"化开"。 */
 ::view-transition-new(root) {
-    animation: vt-root-settle calc(320ms * var(--vt-speed, 1)) cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: vt-root-settle calc(400ms * var(--vt-speed, 1)) cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @keyframes vt-root-settle {
     from {
-        filter: blur(5px) saturate(0.92);
+        filter: blur(8px) saturate(0.9);
     }
+}
+
+/* 换页这几百毫秒里先把毛玻璃"变实"：快照抓到的是不透明的实底卡片，等 vt-running 摘掉后，
+   再由 .card-base 自己的 transition-duration 缓缓化回 58% 的毛玻璃。
+   主人说的"背景由实到虚像卡出来的"，症结就是这个密度差在一帧里跳变 —— 现在它是"化"开的。 */
+html.vt-running {
+    --glass-card: 100%;
 }
 
 /* 交给 View Transition 的这段时间里，别让 swup 的容器淡入再演一遍（否则会双重动画） */
