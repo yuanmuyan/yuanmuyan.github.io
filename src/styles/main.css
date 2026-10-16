@@ -261,3 +261,61 @@ main :is(h1, h2, h3, h4, h5, h6) {
         display: none;
     }
 }
+
+/* ===== 换页动画：共享元素放大（列表卡片封面 → 文章头图） =====
+   JS 在点击时给被点的那张卡片的封面临时挂上 view-transition-name: post-cover，
+   文章页的 #post-cover 用的是同一个名字 ⇒ 浏览器会把封面从卡片的位置连续放大成文章头图。
+   不支持 View Transitions 的浏览器（Firefox）不会走到这里，行为跟以前一样。 */
+#post-cover {
+    view-transition-name: post-cover;
+}
+
+::view-transition-group(post-cover),
+::view-transition-old(post-cover),
+::view-transition-new(post-cover) {
+    animation-duration: 480ms;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 整页的淡入淡出：旧页快一点退，新页从下往上轻轻浮进来 */
+::view-transition-old(root) {
+    animation: vt-root-out 220ms ease-in both;
+}
+
+::view-transition-new(root) {
+    animation: vt-root-in 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes vt-root-out {
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes vt-root-in {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* 交给 View Transition 的这段时间里，别让 swup 的容器淡入再演一遍（否则会双重动画） */
+html.vt-running .transition-swup-fade {
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(post-cover),
+    ::view-transition-old(post-cover),
+    ::view-transition-new(post-cover),
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+        animation-duration: 1ms;
+    }
+}

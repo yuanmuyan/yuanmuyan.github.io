@@ -258,6 +258,75 @@ const bannerOffset =
 			})();
 		</script>
 
+				<!-- 换页动画：用浏览器原生 View Transitions 做「共享元素放大」——点列表卡片的封面，
+		     那张封面会就地放大成文章页的头图。不支持 VT 的浏览器（Firefox）和开了
+		     「减少动态效果」的用户直接跳过，行为跟以前完全一样（走 swup 自己的淡入淡出）。 -->
+		<script is:inline>
+			(() => {
+				if (window.__vtNavInit) return;
+				window.__vtNavInit = true;
+				if (!document.startViewTransition) return;
+				if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+				let busy = false;
+
+				// 挂在 window 的捕获阶段：捕获是从 window 往下的，所以无论 swup 在 document 上怎么注册，
+				// 这里都会先跑到——不会出现「swup 已经跳了、我又跳一次」的重影
+				window.addEventListener(
+					"click",
+					(event) => {
+						if (busy || event.defaultPrevented || event.button !== 0) return;
+						if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+						const link =
+							event.target && event.target.closest ? event.target.closest("a[href]") : null;
+						if (!link || link.target === "_blank" || link.hasAttribute("download")) return;
+						if (link.hasAttribute("data-no-swup") || link.dataset.vt === "off") return;
+						const href = link.getAttribute("href");
+						if (!href || href.startsWith("#")) return;
+						let url;
+						try {
+							url = new URL(href, location.href);
+						} catch {
+							return;
+						}
+						if (url.origin !== location.origin) return;
+						// 同页（只动 hash/query）不接管，交给浏览器自己滚
+						if (url.pathname === location.pathname && url.search === location.search) return;
+						if (!window.swup || typeof window.swup.navigate !== "function") return;
+
+						// 同一页面里同时只能有一个元素叫 post-cover，所以只给点中的这张卡片的封面挂名字
+						const card = link.closest(".card-base") || link.closest("article") || link.parentElement;
+						const cover = card ? card.querySelector(".vt-cover") : null;
+
+						event.preventDefault();
+						event.stopPropagation();
+						busy = true;
+						// swup 的 link:click 钩子被跳过了，把它这行副作用补上（内容入场延迟归零）
+						document.documentElement.style.setProperty("--content-delay", "0ms");
+						if (cover) cover.style.viewTransitionName = "post-cover";
+						document.documentElement.classList.add("vt-running");
+						try {
+							const transition = document.startViewTransition(() =>
+								window.swup.navigate(url.href),
+							);
+							transition.finished.finally(() => {
+								if (cover) cover.style.viewTransitionName = "";
+								document.documentElement.classList.remove("vt-running");
+								busy = false;
+							});
+						} catch (error) {
+							// VT 起不来（极少见）就退回普通导航，别让链接点不动
+							if (cover) cover.style.viewTransitionName = "";
+							document.documentElement.classList.remove("vt-running");
+							busy = false;
+							window.swup.navigate(url.href);
+						}
+					},
+					true, // 捕获阶段：抢在 swup 自己的链接处理之前
+				);
+			})();
+		</script>
+
 		<!-- 萤火虫光点（banner 图上飞一层 + 全站背景一层）＋ 跟着鼠标的天青色光晕。想调数量/亮度/大小改下面的 CONF 就行 -->
 		<script is:inline>
 			(() => {
