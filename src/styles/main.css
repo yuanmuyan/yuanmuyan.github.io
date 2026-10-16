@@ -262,3 +262,23 @@ main :is(h1, h2, h3, h4, h5, h6) {
     }
 }
 
+/* ===== 名字的签名字体（Allura）=====
+   导航栏和首页资料卡里的 "yuanmuyan" 用这款手写体。
+   只含拉丁字形（latin 子集，26KB），字体文件直接走 jsDelivr，不往仓库塞二进制；
+   CDN 万一不通就退回系统的手写体/草书，不会变成方块。
+   颜色不写在这里，由使用处给（走主题色 --primary，现在 = hue 130）。 */
+@font-face {
+    font-family: "Allura Signature";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("https://cdn.jsdelivr.net/npm/@fontsource/allura@5/files/allura-latin-400-normal.woff2") format("woff2");
+}
+
+.font-signature {
+    /* 手写体没有粗体，别让浏览器合成假粗体 */
+    font-family: "Allura Signature", "Segoe Script", "Brush Script MT", cursive;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+}
+

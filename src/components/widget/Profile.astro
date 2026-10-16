@@ -19,7 +19,7 @@ const config = profileConfig;
         <ImageWrapper src={config.avatar || ""} alt="Profile Image of the Author" class="mx-auto lg:w-full h-full lg:mt-0 "></ImageWrapper>
     </a>
     <div class="px-2">
-        <div class="font-bold text-xl text-center mb-1 dark:text-neutral-50 transition">{config.name}</div>
+        <div class="font-signature text-[1.9rem] leading-[1.25] text-center mb-1 text-[var(--primary)] transition">{config.name}</div>
         <div class="h-1 w-5 bg-[var(--primary)] mx-auto rounded-full mb-2 transition"></div>
         <div class="text-center text-neutral-400 mb-2.5 transition">{config.bio}</div>
         <!-- 打字机 + 随机一言（只会出现在主页：Profile 卡片本身只在主页渲染）。台词与句子在 Layout.astro 的 heroFx 里改 -->
