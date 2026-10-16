@@ -300,26 +300,46 @@ const bannerOffset =
 						// 卡片没有封面图（文章没配 image）就退一步：把卡片标题放大成文章大标题
 						const morph = cover || (card ? card.querySelector(".vt-title") : null);
 						const morphName = cover ? "post-cover" : "post-title";
+						let named = null; // 目标页里那个同名元素，动画结束要摘掉
+
+						const clearNames = () => {
+							if (morph) morph.style.viewTransitionName = "";
+							if (named) named.style.viewTransitionName = "";
+							named = null;
+						};
 
 						event.preventDefault();
 						event.stopPropagation();
 						busy = true;
 						// swup 的 link:click 钩子被跳过了，把它这行副作用补上（内容入场延迟归零）
 						document.documentElement.style.setProperty("--content-delay", "0ms");
+						// 起点：点中的那张卡片里的元素（有封面就用封面，没有就用标题）
 						if (morph) morph.style.viewTransitionName = morphName;
 						document.documentElement.classList.add("vt-running");
 						try {
-							const transition = document.startViewTransition(() =>
-								window.swup.navigate(url.href),
-							);
+							const transition = document.startViewTransition(async () => {
+								await window.swup.navigate(url.href);
+								// 终点：新页面里同名的元素（#post-cover 或 #post-title）。
+								// 只有这次真的要放大才挂；像「文章页 → 主页」这种没有终点的导航
+								// 名字全程为空 ⇒ 只做整页溶解，不会多冒出元素来
+								if (!morph) return;
+								const target =
+									morphName === "post-cover"
+										? document.querySelector("#post-cover")
+										: document.querySelector("#post-title");
+								if (target) {
+									target.style.viewTransitionName = morphName;
+									named = target;
+								}
+							});
 							transition.finished.finally(() => {
-								if (morph) morph.style.viewTransitionName = "";
+								clearNames();
 								document.documentElement.classList.remove("vt-running");
 								busy = false;
 							});
 						} catch (error) {
 							// VT 起不来（极少见）就退回普通导航，别让链接点不动
-							if (morph) morph.style.viewTransitionName = "";
+							clearNames();
 							document.documentElement.classList.remove("vt-running");
 							busy = false;
 							window.swup.navigate(url.href);

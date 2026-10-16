@@ -268,14 +268,11 @@ main :is(h1, h2, h3, h4, h5, h6) {
       用同一个名字 ⇒ 封面从卡片的位置连续放大成文章头图；
    ② 没封面（文章 frontmatter 里没有 image，卡片只有标题）：改成给卡片标题挂 post-title、
       文章页的 #post-title 同名字 ⇒ 标题长大成文章大标题。
-   不支持 View Transitions 的浏览器（Firefox）不会走到这里，行为跟以前一样。 */
-#post-cover {
-    view-transition-name: post-cover;
-}
 
-#post-title {
-    view-transition-name: post-title;
-}
+   注意：这两个名字**故意不写在这里**（原来常驻，结果从文章页切回主页时文章标题也会参加
+   动画，而主页没有同名元素 ⇒ 又冒出一条发白的横带）。现在只由 JS 在「真正要放大的那一次
+   导航」临时挂上、动画结束就摘掉。
+   不支持 View Transitions 的浏览器（Firefox）不会走到这里，行为跟以前一样。 */
 
 ::view-transition-group(post-cover),
 ::view-transition-old(post-cover),
