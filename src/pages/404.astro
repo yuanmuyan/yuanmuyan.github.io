@@ -1,0 +1,18 @@
+---
+import MainGridLayout from "../layouts/MainGridLayout.astro";
+---
+<MainGridLayout title="404 · 不许乱翻" description="你在找什么呢？这里什么也没有哦">
+    <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
+        <div class="card-base z-10 px-9 py-14 relative w-full text-center">
+            <div class="text-[6rem] md:text-[8rem] leading-none font-bold text-[var(--primary)] opacity-70 select-none">404</div>
+            <div class="mt-1 text-2xl md:text-3xl font-bold">不许乱翻！</div>
+            <p class="mt-4 text-black/60 dark:text-white/60 leading-relaxed">你在找什么呢？这里什么也没有哦</p>
+            <p class="mt-1 text-black/60 dark:text-white/60 leading-relaxed">再乱翻会有不好的事情发生哦</p>
+            <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+                <a class="btn-regular px-6 py-2.5 rounded-[var(--radius-large)] font-bold" href="/">回首页</a>
+                <a class="btn-regular px-6 py-2.5 rounded-[var(--radius-large)] font-bold" href="/archive/">看归档</a>
+            </div>
+            <div class="mt-8 text-xs text-black/35 dark:text-white/35">404 · Page Not Found</div>
+        </div>
+    </div>
+</MainGridLayout>

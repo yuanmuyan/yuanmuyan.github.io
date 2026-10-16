@@ -2,11 +2,7 @@ import rss from "@astrojs/rss";
 import { getSortedPosts } from "@utils/content-utils";
 import { url } from "@utils/url-utils";
 import type { APIContext } from "astro";
-import MarkdownIt from "markdown-it";
-import sanitizeHtml from "sanitize-html";
 import { siteConfig } from "@/config";
-
-const parser = new MarkdownIt();
 
 function stripInvalidXmlChars(str: string): string {
 	return str.replace(
@@ -23,20 +19,14 @@ export async function GET(context: APIContext) {
 		title: siteConfig.title,
 		description: siteConfig.subtitle || "No description",
 		site: context.site ?? "https://fuwari.vercel.app",
-		items: blog.map((post) => {
-			const content =
-				typeof post.body === "string" ? post.body : String(post.body || "");
-			const cleanedContent = stripInvalidXmlChars(content);
-			return {
-				title: post.data.title,
-				pubDate: post.data.published,
-				description: post.data.description || "",
-				link: url(`/posts/${post.slug}/`),
-				content: sanitizeHtml(parser.render(cleanedContent), {
-					allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
-				}),
-			};
-		}),
+		// 只放摘要，不放全文：原来把整篇正文塞进 <content:encoded>，
+		// 爬虫抓一个 rss.xml 就能把所有文章端走，连翻页都省了。
+		items: blog.map((post) => ({
+			title: stripInvalidXmlChars(post.data.title),
+			pubDate: post.data.published,
+			description: stripInvalidXmlChars(post.data.description || ""),
+			link: url(`/posts/${post.slug}/`),
+		})),
 		customData: `<language>${siteConfig.lang}</language>`,
 	});
 }
