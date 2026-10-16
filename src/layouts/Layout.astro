@@ -327,6 +327,35 @@ const bannerOffset =
 					},
 					true, // 捕获阶段：抢在 swup 自己的链接处理之前
 				);
+
+				// 悬停就先把目标页悄悄抓进浏览器缓存：这样点击时 swup 换 DOM 几乎是瞬时的，
+				// VT 那段「画面冻住等新页面」的停顿会短到看不出来（这才是"卡"的主要来源）
+				const prefetched = new Set();
+				window.addEventListener(
+					"pointerover",
+					(event) => {
+						const link =
+							event.target && event.target.closest ? event.target.closest("a[href]") : null;
+						if (!link || link.target === "_blank" || link.hasAttribute("download")) return;
+						if (link.hasAttribute("data-no-swup") || link.dataset.vt === "off") return;
+						const href = link.getAttribute("href");
+						if (!href || href.startsWith("#")) return;
+						let url;
+						try {
+							url = new URL(href, location.href);
+						} catch {
+							return;
+						}
+						if (url.origin !== location.origin || prefetched.has(url.href)) return;
+						prefetched.add(url.href);
+						const tag = document.createElement("link");
+						tag.rel = "prefetch";
+						tag.as = "document";
+						tag.href = url.href;
+						document.head.appendChild(tag);
+					},
+					true,
+				);
 			})();
 		</script>
 
@@ -551,6 +580,8 @@ const bannerOffset =
 				const frame = (now) => {
 					requestAnimationFrame(frame);
 					if (document.hidden) return;
+					// 换页动画那几帧是合成压力最大的时刻，先停掉 canvas 重绘，让放大更顺
+					if (document.documentElement.classList.contains("vt-running")) return;
 					const dt = Math.min(now - last, 64);
 					last = now;
 					for (const l of layers) {
