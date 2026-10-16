@@ -168,7 +168,7 @@ const bannerOffset =
 					banner: { max: 46, density: 20000, alpha: 0.9, rMin: 1.5, rMax: 3.2, glow: 8.5, speed: 0.8 },
 					ambient: { max: 40, density: 55000, alpha: 0.62, rMin: 1.3, rMax: 2.8, glow: 7.5, speed: 0.6 },
 					drift: 0.14,
-					pointer: { r: 150, alpha: 0.16, ease: 0.12, color: [[72, 178, 168], [164, 219, 208]] },
+					pointer: { r: 88, alpha: 0.42, ease: 0.12, color: [[38, 148, 138], [170, 235, 222]] },
 				};
 				const COOL = [178, 255, 205];
 				const WARM = [255, 246, 170];
@@ -301,10 +301,11 @@ const bannerOffset =
 						if (!host.active || !host.w) return;
 						ctx.globalCompositeOperation = host.dark ? "lighter" : "source-over";
 						const c = opts.color[host.dark ? 1 : 0];
-						const a = opts.alpha * (host.dark ? 1 : 1.15);
+						const a = opts.alpha * (host.dark ? 1 : 1.25);
 						const g = ctx.createRadialGradient(host.x, host.y, 0, host.x, host.y, host.r);
 						g.addColorStop(0, "rgba(" + c[0] + ", " + c[1] + ", " + c[2] + ", " + a + ")");
-						g.addColorStop(0.45, "rgba(" + c[0] + ", " + c[1] + ", " + c[2] + ", " + a * 0.32 + ")");
+						g.addColorStop(0.16, "rgba(" + c[0] + ", " + c[1] + ", " + c[2] + ", " + a * 0.7 + ")");
+						g.addColorStop(0.45, "rgba(" + c[0] + ", " + c[1] + ", " + c[2] + ", " + a * 0.26 + ")");
 						g.addColorStop(1, "rgba(" + c[0] + ", " + c[1] + ", " + c[2] + ", 0)");
 						ctx.fillStyle = g;
 						ctx.beginPath();
