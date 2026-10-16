@@ -330,6 +330,18 @@ html.vt-running .transition-swup-fade {
     transform: none !important;
 }
 
+/* 同时把各组件自己的入场动画（transition.css 里的 .onload-animation：
+   opacity: 0 + translateY(2rem) + 300ms、正文各块还有最多 325ms 的错峰延迟）按到终点。
+   不然 View Transition 抓取"新状态"的那一刻，标题/卡片还没落位（甚至还是透明的），
+   变形就会时有时无、看着发糊。
+   这里只改时长和延迟、不写 animation: none —— 一旦用 none 关掉，等 vt-running 摘掉后
+   动画会从头再跑一遍；改成 1ms + fill-mode: forwards 则是"立刻播完并停在终态"。 */
+html.vt-running .onload-animation {
+    opacity: 1 !important;
+    animation-duration: 1ms !important;
+    animation-delay: 0s !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
     ::view-transition-group(post-cover),
     ::view-transition-old(post-cover),
