@@ -157,6 +157,97 @@ const bannerOffset =
 		<!-- increase the page height during page transition to prevent the scrolling animation from jumping -->
 		<div id="page-height-extend" class="hidden h-[300vh]"></div>
 
+		<!-- 阅读进度条：贴在屏幕最上方，随正文滚动；页面太短（没什么可滚的）时自动隐藏 -->
+		<div id="reading-progress" aria-hidden="true"></div>
+
+		<!-- 主页打字机 + 随机一言（元素在 Profile 卡片里，见 widget/Profile.astro）＋ 阅读进度条的驱动 -->
+		<script is:inline>
+			(() => {
+				if (window.__heroFxStarted) return;
+				window.__heroFxStarted = true;
+
+				// ===== 想换台词 / 句子，改这两处就行 =====
+				const TYPED = ["Little Steps of Growth", "web手一枚~", "欢迎各位师傅的参观~", "yuanmuyan"];
+				const QUOTES = [
+					"路漫漫其修远兮，吾将上下而求索。",
+					"海内存知己，天涯若比邻。",
+					"纸上得来终觉浅，绝知此事要躬行。",
+					"长风破浪会有时，直挂云帆济沧海。",
+					"不畏浮云遮望眼，只缘身在最高层。",
+					"山有木兮木有枝，心悦君兮君不知。",
+				];
+				const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+				// ----- 打字机（循环打，逐字打出再逐字删掉）+ 每次刷新随机一句 -----
+				let typing = null;
+				const startHero = () => {
+					const textEl = document.getElementById("hero-typing");
+					const quoteEl = document.getElementById("hero-quote");
+					if (!textEl || typing) return;
+
+					if (quoteEl && !quoteEl.dataset.filled) {
+						quoteEl.dataset.filled = "1";
+						quoteEl.textContent = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+						requestAnimationFrame(() => {
+							quoteEl.style.opacity = "0.75";
+						});
+					}
+					if (reduce) return; // 关了动画就只留静的那一句，不删也不重打
+
+					let i = 0;
+					let pos = 0;
+					let deleting = false;
+					const tick = () => {
+						if (!textEl.isConnected) {
+							typing = null; // 换页把卡片换掉了，收工
+							return;
+						}
+						const line = TYPED[i % TYPED.length];
+						pos += deleting ? -1 : 1;
+						textEl.textContent = line.slice(0, pos);
+						if (!deleting && pos >= line.length) {
+							deleting = true;
+							typing = setTimeout(tick, 2200); // 打完停一会儿
+						} else if (deleting && pos <= 0) {
+							deleting = false;
+							i++;
+							typing = setTimeout(tick, 320);
+						} else {
+							typing = setTimeout(tick, deleting ? 45 : 95 + Math.random() * 60);
+						}
+					};
+					typing = setTimeout(tick, 600);
+				};
+
+				// ----- 阅读进度条（transform: scaleX 走 GPU，滚动里只做一次 rAF）-----
+				const bar = document.getElementById("reading-progress");
+				let raf = 0;
+				const paint = () => {
+					raf = 0;
+					if (!bar) return;
+					const doc = document.documentElement;
+					const top = Math.max(window.scrollY || doc.scrollTop || 0, document.body.scrollTop || 0);
+					const max = Math.max(1, (doc.scrollHeight || 0) - window.innerHeight);
+					const p = Math.min(1, Math.max(0, top / max));
+					bar.style.transform = "scaleX(" + p.toFixed(4) + ")";
+					bar.style.opacity = max < 120 ? "0" : "1"; // 太短的页面就不显示
+				};
+				const onScroll = () => {
+					if (!raf) raf = requestAnimationFrame(paint);
+				};
+
+				window.addEventListener("scroll", onScroll, { passive: true });
+				window.addEventListener("resize", onScroll, { passive: true });
+				document.addEventListener("swup:content:replace", () => {
+					startHero();
+					onScroll();
+				});
+
+				startHero();
+				onScroll();
+			})();
+		</script>
+
 		<!-- 萤火虫光点（banner 图上飞一层 + 全站背景一层）＋ 跟着鼠标的天青色光晕。想调数量/亮度/大小改下面的 CONF 就行 -->
 		<script is:inline>
 			(() => {

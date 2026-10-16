@@ -175,3 +175,89 @@ html::before {
     background-repeat: no-repeat;
     opacity: var(--site-bg-opacity);
 }
+
+/* ===== 阅读进度条：贴着屏幕最上方，随正文滚动 =====
+   想改粗细/颜色动这里；太短的页面由脚本把 opacity 压成 0 */
+#reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    z-index: 60; /* 在导航栏（z-50）之上，正文之下不占位 */
+    pointer-events: none;
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background: linear-gradient(
+        90deg,
+        var(--primary),
+        color-mix(in srgb, var(--primary) 45%, #a4dbd0)
+    );
+    box-shadow: 0 0 6px color-mix(in srgb, var(--primary) 45%, transparent);
+}
+
+/* ===== 主页打字机的光标 ===== */
+#hero-caret {
+    display: inline-block;
+    width: 2px;
+    height: 0.95em;
+    margin-left: 3px;
+    vertical-align: -0.1em;
+    background: var(--primary);
+    animation: hero-caret-blink 1.05s steps(1, end) infinite;
+}
+
+@keyframes hero-caret-blink {
+    0%, 45% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+
+/* ===== 侧栏目录：当前小节高亮 + 悬浮反馈 ===== */
+#post-toc #toc a::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 3px;
+    height: 0;
+    border-radius: 999px;
+    background: var(--primary);
+    opacity: 0;
+    transform: translateY(-50%);
+    transition: height 0.25s ease, opacity 0.25s ease;
+}
+
+#post-toc #toc a.visible::before {
+    height: 58%;
+    opacity: 1;
+}
+
+#post-toc #toc a.visible > div:last-child {
+    color: var(--primary);
+    opacity: 1;
+}
+
+#post-toc #toc a:hover,
+#post-toc #toc a:active {
+    transform: translateX(2px);
+}
+
+/* 点目录跳转时平滑滚动，并给标题留出导航栏的高度 */
+html {
+    scroll-behavior: smooth;
+}
+
+main :is(h1, h2, h3, h4, h5, h6) {
+    scroll-margin-top: 5.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+    #hero-caret {
+        display: none;
+    }
+}
