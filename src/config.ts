@@ -53,10 +53,10 @@ export const navBarConfig: NavBarConfig = {
 	links: [
 		LinkPreset.Home,
 		LinkPreset.Archive,
-		LinkPreset.About,
-		{ name: "友链", url: "/friends/", external: false },
 		{ name: "WP", url: "/wp/", external: false },
 		{ name: "废纸堆", url: "/whispers/", external: false },
+		{ name: "友链", url: "/friends/", external: false },
+		LinkPreset.About,
 		{
 			name: "GitHub",
 			url: "https://github.com/yuanmuyan",
