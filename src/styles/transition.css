@@ -1,6 +1,13 @@
 /* Page transition animations with Swup */
 html.is-changing .transition-swup-fade {
-    @apply transition-all duration-200
+    @apply transition-all duration-[80ms]
+}
+/* 客户端换页（swup）之后不再走「错峰入场」：
+   内容换进来就该立刻可读，否则每次点链接都要先等 300ms + 错峰延迟才浮上来。
+   只对「已经换过页」的文档生效，首次打开页面仍然保留原来的错峰。 */
+html.swup-navigated .onload-animation {
+    animation-delay: 0ms !important;
+    animation-duration: 150ms !important;
 }
 /* 换页时只让内容淡一下，**绝不下移**：
    下移 1rem 会让卡片顶边让出一条缝（#swup-container 带 overflow-hidden，移出去的部分被裁掉），

@@ -665,6 +665,13 @@ const bannerOffset =
 			})();
 		</script>
 
+		<!-- 客户端换页后不再走「错峰入场」：首次打开的错峰保持不动 -->
+		<script is:inline>
+			document.addEventListener("swup:content:replace", () => {
+				document.documentElement.classList.add("swup-navigated");
+			});
+		</script>
+
 		<!-- 萤火虫光点（banner 图上飞一层 + 全站背景一层）＋ 跟着鼠标的天青色光晕。想调数量/亮度/大小改下面的 CONF 就行 -->
 		<script is:inline>
 			(() => {
