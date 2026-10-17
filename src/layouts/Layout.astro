@@ -629,6 +629,8 @@ const bannerOffset =
 							return;
 						}
 						if (url.origin !== location.origin) return;
+						// /wp/ 里同一篇文章的小节链接只差 #锚点 ⇒ 去掉锚点再去重，别为同一篇发一堆预取
+						url.hash = "";
 						if (prefetched.has(url.href) || hrefs.indexOf(url.href) !== -1) return;
 						hrefs.push(url.href);
 					});
@@ -656,7 +658,7 @@ const bannerOffset =
 				// 站内换页（swup / Astro）之后 load 不会再触发，不补这一次的话
 				// 从首页换到 /wp/ 再点题目就等于全新下载一整篇文章（116KB）。
 				const reschedule = () => {
-					window.setTimeout(() => startIdlePrefetch(wanted()), 600);
+					window.setTimeout(() => startIdlePrefetch(wanted()), 250);
 				};
 				document.addEventListener("astro:page-load", reschedule);
 				document.addEventListener("swup:page:view", reschedule);
