@@ -721,6 +721,22 @@ const bannerOffset =
 			document.addEventListener("swup:content:replace", () => {
 				document.documentElement.classList.add("swup-navigated");
 			});
+
+			// swup 换页不会重跑「新页面里自带的内联脚本」（例如废纸堆的抽卡/图鉴逻辑），
+			// 带 data-revive 的脚本在这里补跑一次；脚本自己会打 data-booted 标记，不会跑两遍。
+			const revivePageScripts = () => {
+				document.querySelectorAll("script[data-revive]").forEach((old) => {
+					if (old.dataset.booted === "1") return;
+					const fresh = document.createElement("script");
+					for (const attr of old.attributes) {
+						fresh.setAttribute(attr.name, attr.value);
+					}
+					fresh.textContent = old.textContent;
+					old.replaceWith(fresh);
+				});
+			};
+			document.addEventListener("astro:page-load", revivePageScripts);
+			document.addEventListener("swup:page:view", revivePageScripts);
 		</script>
 
 		<!-- 萤火虫光点（banner 图上飞一层 + 全站背景一层）＋ 跟着鼠标的天青色光晕。想调数量/亮度/大小改下面的 CONF 就行 -->

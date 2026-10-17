@@ -141,6 +141,7 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
 		-webkit-background-clip: text;
 		background-clip: text;
 		color: transparent;
+		-webkit-text-fill-color: transparent;
 		animation: wisp-shimmer 5s linear infinite;
 	}
 	.wisp-card[data-rarity="传说"] .wisp-text {
@@ -149,6 +150,7 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
 		-webkit-background-clip: text;
 		background-clip: text;
 		color: transparent;
+		-webkit-text-fill-color: transparent;
 		animation: wisp-shimmer 4s linear infinite;
 	}
 	html.dark .wisp-card[data-rarity="稀有"] .wisp-text {
@@ -291,6 +293,7 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
 		-webkit-background-clip: text;
 		background-clip: text;
 		color: transparent;
+		-webkit-text-fill-color: transparent;
 		animation: wisp-shimmer 5s linear infinite;
 	}
 	.wisp-slot:not(.locked)[data-rarity="传说"] .wisp-slot-text {
@@ -299,6 +302,7 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
 		-webkit-background-clip: text;
 		background-clip: text;
 		color: transparent;
+		-webkit-text-fill-color: transparent;
 		animation: wisp-shimmer 4s linear infinite;
 	}
 	html.dark .wisp-slot:not(.locked)[data-rarity="稀有"] .wisp-slot-text {
@@ -325,8 +329,10 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
 	}
 </style>
 
-<script is:inline define:vars={{ whispers, whisperRarityWeight, whisperDailyLimit }}>
+<script is:inline data-revive define:vars={{ whispers, whisperRarityWeight, whisperDailyLimit }}>
 	(function () {
+		// swup 换页后这个内联脚本会被 Layout 的 data-revive 机制补跑；先给自己打个标记，避免跑两遍
+		if (document.currentScript) document.currentScript.dataset.booted = "1";
 		const STORE_KEY = "yuanmuyan-wisp-v1";
 		const RARITY_COLOR = { 普通: "#8ab4a8", 稀有: "#4f9ec4", 传说: "#c9a227" };
 
