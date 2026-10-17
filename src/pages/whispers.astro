@@ -312,6 +312,18 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
 		background-image: linear-gradient(100deg, #f2d27a, #fbbf24, #fca5a5, #d8b4fe, #86efac, #67e8f9, #f2d27a);
 	}
 
+	/* 小屏（手机）上把流动动画停掉、只留静态渐变：
+	   百度 / vivo 这些魔改内核在动画结束或重绘时会把渐变字闪成暗色甚至黑色，静态最稳。
+	   颜色一点都不少，只是不再「流」；桌面端照旧流动。 */
+	@media (max-width: 700px) {
+		.wisp-card[data-rarity="稀有"] .wisp-text,
+		.wisp-card[data-rarity="传说"] .wisp-text,
+		.wisp-slot:not(.locked)[data-rarity="稀有"] .wisp-slot-text,
+		.wisp-slot:not(.locked)[data-rarity="传说"] .wisp-slot-text {
+			animation: none;
+		}
+	}
+
 	.wisp-slot[data-rarity="稀有"] {
 		border-color: #4f9ec4;
 	}
