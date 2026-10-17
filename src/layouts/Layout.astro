@@ -579,6 +579,57 @@ const bannerOffset =
 			})();
 		</script>
 
+		<!-- 锚点平滑滚动：自己写 easeOut 曲线，点下去立刻动（浏览器自带的 smooth 是 ease-in，长文章里开头几乎不动） -->
+		<script is:inline>
+			(() => {
+				const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+				const ease = (t) => 1 - Math.pow(1 - t, 3);
+				let raf = 0;
+				const stop = () => {
+					if (raf) cancelAnimationFrame(raf);
+					raf = 0;
+				};
+				document.addEventListener(
+					"click",
+					(e) => {
+						const a = e.target instanceof Element ? e.target.closest('a[href*="#"]') : null;
+						if (!a || a.target === "_blank") return;
+						let u;
+						try {
+							u = new URL(a.href, location.href);
+						} catch {
+							return;
+						}
+						if (!u.hash || u.pathname !== location.pathname || u.search !== location.search) return;
+						const el = document.getElementById(decodeURIComponent(u.hash.slice(1)));
+						if (!el) return;
+						e.preventDefault();
+						e.stopPropagation();
+						const nav = document.getElementById("navbar");
+						const off = (nav ? nav.offsetHeight : 64) + 12;
+						const from = window.scrollY;
+						const to = Math.max(0, el.getBoundingClientRect().top + window.scrollY - off);
+						history.replaceState(null, "", u.hash);
+						if (reduce || Math.abs(to - from) < 4) {
+							window.scrollTo(0, to);
+							return;
+						}
+						stop();
+						const dur = Math.min(560, 200 + Math.abs(to - from) * 0.12);
+						const t0 = performance.now();
+						const step = (now) => {
+							const t = Math.min(1, (now - t0) / dur);
+							window.scrollTo(0, from + (to - from) * ease(t));
+							raf = t < 1 ? requestAnimationFrame(step) : 0;
+						};
+						raf = requestAnimationFrame(step);
+					},
+					true,
+				);
+				for (const ev of ["wheel", "touchstart", "keydown"]) addEventListener(ev, stop, { passive: true });
+			})();
+		</script>
+
 		<!-- 悬停预取：纯加速，画面上不出现任何东西 -->
 		<script is:inline>
 			(() => {
