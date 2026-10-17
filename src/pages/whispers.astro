@@ -179,8 +179,29 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
 		border-radius: 0.75rem;
 		font-size: 0.8rem;
 		line-height: 1.5;
+		color: var(--wisp-text, inherit);
 		background: color-mix(in srgb, var(--card-bg) 55%, transparent);
 		border: 1px solid color-mix(in srgb, var(--primary) 16%, transparent);
+	}
+
+	/* 图鉴里「已收集」的条目也按稀有度上色，和卡片正面对齐；未收集的「？」保持灰 */
+	.wisp-slot:not(.locked)[data-rarity="普通"] {
+		--wisp-text: #1f5d4e;
+	}
+	.wisp-slot:not(.locked)[data-rarity="稀有"] {
+		--wisp-text: #17567d;
+	}
+	.wisp-slot:not(.locked)[data-rarity="传说"] {
+		--wisp-text: #7a5c0a;
+	}
+	html.dark .wisp-slot:not(.locked)[data-rarity="普通"] {
+		--wisp-text: #a8e3d2;
+	}
+	html.dark .wisp-slot:not(.locked)[data-rarity="稀有"] {
+		--wisp-text: #93c8ee;
+	}
+	html.dark .wisp-slot:not(.locked)[data-rarity="传说"] {
+		--wisp-text: #f2d27a;
 	}
 
 	.wisp-slot[data-rarity="稀有"] {
