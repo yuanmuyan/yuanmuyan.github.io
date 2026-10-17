@@ -121,13 +121,14 @@ GIF89a<?=system($_GET['c']); ?>
 ```
 权限600
 ![图 7](/images/tsctf-2026/21.webp)  
-查看etc等等
+查看 /etc 下的 cron 目录。本来还打算看 cron.daily，结果在 `/etc/cron.d/` 里就撞见了异常：
+`teahouse-cleanup` 每分钟以 root 执行 `/opt/teahouse/bin/clean_uploads.sh`。
 ![图 8](/images/tsctf-2026/22.webp)  
 ![图 9](/images/tsctf-2026/23.webp)  
-再cat一下
+顺着 cat 那个脚本，里面有 `source "/var/lib/teahouse/cleanup.conf"` —— source 是按执行者的权限跑的，执行者是 root，而这个 conf 的属主是 www-data，**可写**。
 ![图 13](/images/tsctf-2026/24.webp)  
 ![图 12](/images/tsctf-2026/25.webp)  
-意味着root用户会直接读取并执行/var/lib/teahouse/cleanup.conf,查看发现有写入权限
+
 ![图 14](/images/tsctf-2026/26.webp)
 写入复制flag命令  
 ```

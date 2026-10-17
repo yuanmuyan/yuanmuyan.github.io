@@ -13,8 +13,7 @@ const wpPosts = allPosts
 	.filter((post) => (post.data.tags ?? []).includes("WP"))
 	.sort(
 		(a, b) =>
-			new Date(b.data.published).valueOf() -
-			new Date(a.data.published).valueOf(),
+			new Date(b.data.published).valueOf() - new Date(a.data.published).valueOf(),
 	);
 
 const groups = await Promise.all(
