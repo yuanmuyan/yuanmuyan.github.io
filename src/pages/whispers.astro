@@ -94,6 +94,8 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
 	}
 
 	.wisp-front {
+		position: relative;
+		overflow: hidden;
 		transform: rotateY(180deg);
 		background: color-mix(in srgb, var(--card-bg) 88%, transparent);
 		border: 1px solid color-mix(in srgb, var(--wisp-color, var(--primary)) 45%, transparent);
@@ -130,6 +132,82 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
 	}
 	html.dark .wisp-card[data-rarity="传说"] .wisp-text {
 		--wisp-text: #f2d27a;
+	}
+
+	/* 稀有 / 传说：正文改成流动的渐变字（像「token 来！」那样会缓缓流过去），普通保持纯色 */
+	.wisp-card[data-rarity="稀有"] .wisp-text {
+		background: linear-gradient(100deg, #17567d, #0e7490, #1d4ed8, #0f766e, #17567d);
+		background-size: 220% 100%;
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
+		animation: wisp-shimmer 5s linear infinite;
+	}
+	.wisp-card[data-rarity="传说"] .wisp-text {
+		background: linear-gradient(100deg, #7a5c0a, #b45309, #a16207, #4d7c0f, #0f766e, #6d28d9, #a21caf, #7a5c0a);
+		background-size: 220% 100%;
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
+		animation: wisp-shimmer 4s linear infinite;
+	}
+	html.dark .wisp-card[data-rarity="稀有"] .wisp-text {
+		background: linear-gradient(100deg, #93c8ee, #67e8f9, #a5b4fc, #86efac, #93c8ee);
+	}
+	html.dark .wisp-card[data-rarity="传说"] .wisp-text {
+		background: linear-gradient(100deg, #f2d27a, #fbbf24, #fca5a5, #d8b4fe, #86efac, #67e8f9, #f2d27a);
+	}
+	@keyframes wisp-shimmer {
+		from {
+			background-position: 0% 50%;
+		}
+		to {
+			background-position: 220% 50%;
+		}
+	}
+
+	/* 传说：翻开的一瞬间有一道斜光扫过 */
+	.wisp-front::after {
+		content: "";
+		position: absolute;
+		inset: -40%;
+		pointer-events: none;
+		opacity: 0;
+		transform: translateX(-120%);
+		background: linear-gradient(
+			115deg,
+			transparent 38%,
+			color-mix(in srgb, #fde68a 55%, transparent) 48%,
+			rgba(255, 255, 255, 0.78) 52%,
+			color-mix(in srgb, #fde68a 45%, transparent) 56%,
+			transparent 66%
+		);
+	}
+	.wisp-card[data-rarity="传说"].flipped .wisp-front::after {
+		animation: wisp-flare 1.1s ease-out 0.35s 1 both;
+	}
+	@keyframes wisp-flare {
+		0% {
+			opacity: 0;
+			transform: translateX(-120%);
+		}
+		25% {
+			opacity: 1;
+		}
+		100% {
+			opacity: 0;
+			transform: translateX(120%);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.wisp-card[data-rarity="稀有"] .wisp-text,
+		.wisp-card[data-rarity="传说"] .wisp-text {
+			animation: none;
+		}
+		.wisp-card[data-rarity="传说"].flipped .wisp-front::after {
+			animation: none;
+		}
 	}
 
 	.wisp-card.shaking {
