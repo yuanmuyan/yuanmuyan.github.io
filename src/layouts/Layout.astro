@@ -612,14 +612,14 @@ const bannerOffset =
 				);
 
 				// 手机没有 hover，上面那套预取用不上；页面彻底空下来之后，
-				// 悄悄把前两篇文章的 HTML 先下到缓存里（只下 HTML，图片照样点开才加载）。
+				// 悄悄把接下来最可能点的几篇文章的 HTML 先下到缓存里（只下 HTML，图片照样点开才加载）。
 				// 省流开着、或者网络是 2G/3G 的时候不做，免得偷跑流量。
-				const idlePrefetch = () => {
+				const idlePrefetch = (limit) => {
 					const conn = navigator.connection;
 					if (conn && (conn.saveData || /^([23]g|slow-2g)$/.test(conn.effectiveType || ""))) return;
 					const hrefs = [];
 					document.querySelectorAll('a[href^="/posts/"]').forEach((a) => {
-						if (hrefs.length >= 2) return;
+						if (hrefs.length >= limit) return;
 						if (a.target === "_blank" || a.hasAttribute("download")) return;
 						if (a.hasAttribute("data-no-swup")) return;
 						let url;
@@ -641,15 +641,25 @@ const bannerOffset =
 						document.head.appendChild(tag);
 					});
 				};
-				const startIdlePrefetch = () => {
+				const startIdlePrefetch = (limit) => {
+					const run = () => idlePrefetch(limit);
 					if (typeof window.requestIdleCallback === "function") {
-						window.requestIdleCallback(idlePrefetch, { timeout: 4000 });
+						window.requestIdleCallback(run, { timeout: 4000 });
 					} else {
-						window.setTimeout(idlePrefetch, 2500);
+						window.setTimeout(run, 2500);
 					}
 				};
-				if (document.readyState === "complete") startIdlePrefetch();
-				else window.addEventListener("load", startIdlePrefetch, { once: true });
+				// 索引页（/wp/、/archive/）上整页都是通往文章的链接 ⇒ 多预取几篇
+				const wanted = () => (/^\/(wp|archive)\b/.test(location.pathname) ? 3 : 2);
+				if (document.readyState === "complete") startIdlePrefetch(wanted());
+				else window.addEventListener("load", () => startIdlePrefetch(wanted()), { once: true });
+				// 站内换页（swup / Astro）之后 load 不会再触发，不补这一次的话
+				// 从首页换到 /wp/ 再点题目就等于全新下载一整篇文章（116KB）。
+				const reschedule = () => {
+					window.setTimeout(() => startIdlePrefetch(wanted()), 600);
+				};
+				document.addEventListener("astro:page-load", reschedule);
+				document.addEventListener("swup:page:view", reschedule);
 			})();
 		</script>
 

@@ -11,10 +11,11 @@ const allPosts = await getCollection("posts", ({ data }) => {
 
 const wpPosts = allPosts
 	.filter((post) => (post.data.tags ?? []).includes("WP"))
-	.sort(
-		(a, b) =>
-			new Date(b.data.published).valueOf() - new Date(a.data.published).valueOf(),
-	);
+	.sort((a, b) => {
+		const tb = new Date(b.data.published).valueOf();
+		const ta = new Date(a.data.published).valueOf();
+		return tb - ta;
+	});
 
 const groups = await Promise.all(
 	wpPosts.map(async (post) => {
