@@ -110,6 +110,7 @@ const bannerOffset =
 		))}
 		<link rel="manifest" href={url("/site.webmanifest")} />
 		<link rel="apple-touch-icon" sizes="180x180" href={url("/favicon/avatar-180.png")} />
+		<meta name="color-scheme" content="light dark" />
 		<meta name="theme-color" content="#9fdfd0" media="(prefers-color-scheme: light)" />
 		<meta name="theme-color" content="#123331" media="(prefers-color-scheme: dark)" />
 
@@ -141,6 +142,17 @@ const bannerOffset =
 			offset = offset - offset % 4;
 			document.documentElement.style.setProperty('--banner-height-extend', `${offset}px`);
 		</script>
+
+		<!-- 告诉浏览器「本站自己管明暗」。不加这条时，手机浏览器（例如 vivo 的「强制深色/网页深色」）
+		     会在你把站点切成亮色后又把页面涂回深色：表现就是只闪一下白光又变黑，而主题按钮仍显示亮色。 -->
+		<style is:inline>
+			:root {
+				color-scheme: light;
+			}
+			html.dark {
+				color-scheme: dark;
+			}
+		</style>
 
 		<!-- ===== 入场动画：第一次进站时，在幕布上把名字「写」出来（Allura 签名体 + 扫掠笔尖）+ 萤火虫，收焦后揭开 =====
 		     样式放这里（内联）是为了在第一帧就画上幕布，不然会先闪一下页面。
