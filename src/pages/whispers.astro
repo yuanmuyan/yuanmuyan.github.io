@@ -109,6 +109,27 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
 	.wisp-text {
 		font-size: 1.05rem;
 		line-height: 1.75;
+		color: var(--wisp-text, inherit);
+	}
+
+	/* 悄悄话按稀有度上色：亮色用同色系的深色字，暗色换成淡色版，三种配色对底色的对比度都在 5.2 以上 */
+	.wisp-card[data-rarity="普通"] .wisp-text {
+		--wisp-text: #1f5d4e;
+	}
+	.wisp-card[data-rarity="稀有"] .wisp-text {
+		--wisp-text: #17567d;
+	}
+	.wisp-card[data-rarity="传说"] .wisp-text {
+		--wisp-text: #7a5c0a;
+	}
+	html.dark .wisp-card[data-rarity="普通"] .wisp-text {
+		--wisp-text: #a8e3d2;
+	}
+	html.dark .wisp-card[data-rarity="稀有"] .wisp-text {
+		--wisp-text: #93c8ee;
+	}
+	html.dark .wisp-card[data-rarity="传说"] .wisp-text {
+		--wisp-text: #f2d27a;
 	}
 
 	.wisp-card.shaking {
@@ -295,6 +316,7 @@ import MainGridLayout from "../layouts/MainGridLayout.astro";
 			state.drawn[w.id] = (state.drawn[w.id] || 0) + 1;
 			saveState();
 			card.style.setProperty("--wisp-color", RARITY_COLOR[w.rarity] || "");
+			card.dataset.rarity = w.rarity;
 			rarityEl.textContent = w.rarity;
 			textEl.textContent = w.text;
 			card.classList.add("flipped");
