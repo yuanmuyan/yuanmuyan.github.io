@@ -244,9 +244,11 @@ html::before {
     transform: translateX(2px);
 }
 
-/* 点目录跳转时平滑滚动，并给标题留出导航栏的高度 */
+/* 点目录跳转时，标题要留出导航栏的高度。
+   这里**刻意不用 smooth**：长文章（43 张图、几千字）里平滑滚动的开头一两百毫秒
+   几乎不动，点题目会像「点了没反应」，然后才开始下滑 —— 改成立刻到位。 */
 html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
 }
 
 main :is(h1, h2, h3, h4, h5, h6) {

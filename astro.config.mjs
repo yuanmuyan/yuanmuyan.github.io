@@ -39,7 +39,8 @@ export default defineConfig({
 			// the default value `transition-` cause transition delay
 			// when the Tailwind class `transition-all` is used
 			containers: ["main", "#sidebar"], // #sidebar 里住着头像卡与文章目录，要跟着客户端跳转一起换
-			smoothScrolling: true,
+			// 长文章里平滑滚动会让「点题目」像点了没反应，改成立刻到位
+			smoothScrolling: false,
 			cache: true,
 			preload: true,
 			accessibility: true,
