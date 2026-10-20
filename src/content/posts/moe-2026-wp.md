@@ -129,6 +129,8 @@ echo "Flag 就在上面，只有聪明的人才能看见<br>...";
 $flag = "moectf{86e956a9-c19d-06e2-bf04-3369fa876c97}";
 ```
 
+顺手把其他滤波器也试了一遍：`string.rot13`、`convert.quoted-printable-encode` 全都撞在黑名单上（`string`、`convert` 开头就没了），`zlib.inflate` 对明文直接报错，`phar://` 也没用。能绕过去的只剩 `zlib.deflate` 这一条。
+
 这题有两个点值得记：黑名单不是安全边界；还有用 `php://filter` 读源码时，必须让流"不再是 PHP 代码"，否则 include 直接把它执行掉了。
 
 ### 小结
