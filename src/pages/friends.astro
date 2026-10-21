@@ -1,78 +1,27 @@
 ---
 import MainGridLayout from "../layouts/MainGridLayout.astro";
+import friends from "../data/friends.json";
 ---
 
 <MainGridLayout title="友链" description="我的朋友们">
     <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
         <div class="card-base z-10 px-9 py-6 relative w-full">
             <div class="text-2xl font-bold text-[var(--primary)] mb-3">朋友们</div>
-            <div class="text-black/50 dark:text-white/50 mb-6">这里是我的朋友们，欢迎去他们的站点逛逛。</div>
+            <div class="text-black/50 dark:text-white/50 mb-6">
+                这里是我的朋友们，欢迎去他们的站点逛逛。<a href="/moments/" class="text-[var(--primary)] hover:underline">朋友圈</a> 里能看到他们最近写了什么。
+            </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <a href="https://map1e-suk1.github.io/" target="_blank" rel="noopener noreferrer" class="card-base card-shadow p-4 flex items-center gap-4 group transition hover:-translate-y-0.5 active:scale-[0.99]">
-                  <img src="https://map1e-suk1.github.io/avatar.webp" alt="Map1e-Suk1" class="w-12 h-12 rounded-full shrink-0 object-cover" />
-                    <div class="min-w-0 flex-1">
-                        <div class="text-lg font-bold truncate text-black dark:text-white transition group-hover:text-[var(--primary)]">Map1e-Suk1</div>
-                        <div class="text-sm text-black/40 dark:text-white/40 truncate">Astro + Fuwari，写题解的那位</div>
-                    </div>
-                    <span class="text-black/20 dark:text-white/20 group-hover:text-[var(--primary)] transition shrink-0">↗</span>
-                </a>
-                <a href="https://kioroshiaki.github.io/" target="_blank" rel="noopener noreferrer" class="card-base card-shadow p-4 flex items-center gap-4 group transition hover:-translate-y-0.5 active:scale-[0.99]">
-                    <img src="https://kioroshiaki.github.io/img/blowfish_logo.png" alt="Kioroshi Aki" class="w-12 h-12 rounded-full shrink-0 object-cover" />
-                    <div class="min-w-0 flex-1">
-                        <div class="text-lg font-bold truncate text-black dark:text-white transition group-hover:text-[var(--primary)]">Kioroshi Aki</div>
-                        <div class="text-sm text-black/40 dark:text-white/40 truncate">Hugo + Blowfish，主攻 Pwn</div>
-                    </div>
-                    <span class="text-black/20 dark:text-white/20 group-hover:text-[var(--primary)] transition shrink-0">↗</span>
-                </a>
-                <a href="https://piyuanzhoulv.github.io/" target="_blank" rel="noopener noreferrer" class="card-base card-shadow p-4 flex items-center gap-4 group transition hover:-translate-y-0.5 active:scale-[0.99]">
-                    <img src="https://piyuanzhoulv.github.io/images/logo.png" alt="圆周率的废纸堆" class="w-12 h-12 rounded-full shrink-0 object-cover" />
-                    <div class="min-w-0 flex-1">
-                        <div class="text-lg font-bold truncate text-black dark:text-white transition group-hover:text-[var(--primary)]">圆周率的废纸堆</div>
-                        <div class="text-sm text-black/40 dark:text-white/40 truncate">里面或许有你需要的？</div>
-                    </div>
-                    <span class="text-black/20 dark:text-white/20 group-hover:text-[var(--primary)] transition shrink-0">↗</span>
-                </a>
-                <a href="https://aclosure.github.io/" target="_blank" rel="noopener noreferrer" class="card-base card-shadow p-4 flex items-center gap-4 group transition hover:-translate-y-0.5 active:scale-[0.99]">
-                    <img src="https://aclosure.github.io/images/Ak_char_007_closre_3.png" alt="aClosure" class="w-12 h-12 rounded-full shrink-0 object-cover" />
-                    <div class="min-w-0 flex-1">
-                        <div class="text-lg font-bold truncate text-black dark:text-white transition group-hover:text-[var(--primary)]">aClosure</div>
-                        <div class="text-sm text-black/40 dark:text-white/40 truncate">Ciallo~</div>
-                    </div>
-                    <span class="text-black/20 dark:text-white/20 group-hover:text-[var(--primary)] transition shrink-0">↗</span>
-                </a>
-                <a href="https://blog.3w3.asia/" target="_blank" rel="noopener noreferrer" class="card-base card-shadow p-4 flex items-center gap-4 group transition hover:-translate-y-0.5 active:scale-[0.99]">
-                    <img src="https://blog.3w3.asia/favicon.png" alt="宛宛" class="w-12 h-12 rounded-full shrink-0 object-cover" />
-                    <div class="min-w-0 flex-1">
-                        <div class="text-lg font-bold truncate text-black dark:text-white transition group-hover:text-[var(--primary)]">宛宛（Wan blog）</div>
-                        <div class="text-sm text-black/40 dark:text-white/40 truncate">自建 Rin，人生五十年，如梦亦如幻</div>
-                    </div>
-                    <span class="text-black/20 dark:text-white/20 group-hover:text-[var(--primary)] transition shrink-0">↗</span>
-                </a>
-                <a href="https://ch0kk4ku.github.io/" target="_blank" rel="noopener noreferrer" class="card-base card-shadow p-4 flex items-center gap-4 group transition hover:-translate-y-0.5 active:scale-[0.99]">
-                    <img src="https://ch0kk4ku.github.io/_astro/avatar.yr5wXXsA.avif" alt="Ch0kk4ku" class="w-12 h-12 rounded-full shrink-0 object-cover" />
-                    <div class="min-w-0 flex-1">
-                        <div class="text-lg font-bold truncate text-black dark:text-white transition group-hover:text-[var(--primary)]">Ch0kk4ku</div>
-                        <div class="text-sm text-black/40 dark:text-white/40 truncate">Astro + Firefly，有趣有盼，无灾无难</div>
-                    </div>
-                    <span class="text-black/20 dark:text-white/20 group-hover:text-[var(--primary)] transition shrink-0">↗</span>
-                </a>
-                <a href="https://xiaolang0817.github.io/personal_blog/" target="_blank" rel="noopener noreferrer" class="card-base card-shadow p-4 flex items-center gap-4 group transition hover:-translate-y-0.5 active:scale-[0.99]">
-                    <img src="https://xiaolang0817.github.io/personal_blog/touxiang.jpg" alt="dalang" class="w-12 h-12 rounded-full shrink-0 object-cover" />
-                    <div class="min-w-0 flex-1">
-                        <div class="text-lg font-bold truncate text-black dark:text-white transition group-hover:text-[var(--primary)]">dalang</div>
-                        <div class="text-sm text-black/40 dark:text-white/40 truncate">手写 HTML，健身与碎碎念</div>
-                    </div>
-                    <span class="text-black/20 dark:text-white/20 group-hover:text-[var(--primary)] transition shrink-0">↗</span>
-                </a>
-                <a href="https://aaaa521.github.io/mortal-blog/" target="_blank" rel="noopener noreferrer" class="card-base card-shadow p-4 flex items-center gap-4 group transition hover:-translate-y-0.5 active:scale-[0.99]">
-                    <img src="https://aaaa521.github.io/mortal-blog/avatar.png" alt="Mortal" class="w-12 h-12 rounded-full shrink-0 object-cover" />
-                    <div class="min-w-0 flex-1">
-                        <div class="text-lg font-bold truncate text-black dark:text-white transition group-hover:text-[var(--primary)]">Mortal</div>
-                        <div class="text-sm text-black/40 dark:text-white/40 truncate">网络安全学习者 / CTF 选手的学习记录</div>
-                    </div>
-                    <span class="text-black/20 dark:text-white/20 group-hover:text-[var(--primary)] transition shrink-0">↗</span>
-                </a>
+                {friends.sites.map((friend) => (
+                    <a href={friend.url} target="_blank" rel="noopener noreferrer" class="card-base card-shadow p-4 flex items-center gap-4 group transition hover:-translate-y-0.5 active:scale-[0.99]">
+                        <img src={friend.avatar} alt={friend.name} class="w-12 h-12 rounded-full shrink-0 object-cover" />
+                        <div class="min-w-0 flex-1">
+                            <div class="text-lg font-bold truncate text-black dark:text-white transition group-hover:text-[var(--primary)]">{friend.name}</div>
+                            <div class="text-sm text-black/40 dark:text-white/40 truncate">{friend.desc}</div>
+                        </div>
+                        <span class="text-black/20 dark:text-white/20 group-hover:text-[var(--primary)] transition shrink-0">↗</span>
+                    </a>
+                ))}
             </div>
 
             <div class="mt-8 pt-6 border-t border-black/10 dark:border-white/10">

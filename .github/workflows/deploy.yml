@@ -3,6 +3,9 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [ main ]
+  schedule:
+    # 每天北京时间 05:23 自动重建一次，好让朋友圈抓到朋友们的新文章
+    - cron: '23 21 * * *'
   workflow_dispatch:
 
 permissions:

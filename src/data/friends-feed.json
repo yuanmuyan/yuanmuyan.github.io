@@ -1,0 +1,183 @@
+{
+  "generatedAt": "2026-10-21T13:16:29.386Z",
+  "sites": [
+    {
+      "name": "Map1e-Suk1",
+      "desc": "Astro + Fuwari，写题解的那位",
+      "url": "https://map1e-suk1.github.io/",
+      "avatar": "https://map1e-suk1.github.io/avatar.webp",
+      "hasFeed": true,
+      "items": [
+        {
+          "title": "【杂谈】聊聊VRchat",
+          "link": "https://map1e-suk1.github.io/posts/chat-about-vrchat/",
+          "date": "2026-10-18T00:00:00.000Z",
+          "excerpt": "萌新入坑指北"
+        },
+        {
+          "title": "【补充】TSCTF-J 2026 Writeup",
+          "link": "https://map1e-suk1.github.io/posts/%E8%A1%A5%E5%85%85tsctf-j-2026-writeup/",
+          "date": "2026-10-17T00:00:00.000Z",
+          "excerpt": "对 TSCTF-J 2026 未解出题目的补充WP （在努力做题了） 该文章会一直更新到做不动为止 （大概） web题 题目：玛德莱娜小蛋糕 进入主页面发现一个 存入相册 的按钮，考虑到这是一个低难度web题，猜测是一句…"
+        },
+        {
+          "title": "TSCTF-J 2026 Writeup",
+          "link": "https://map1e-suk1.github.io/posts/tsctf-j-2026-writeup/",
+          "date": "2026-10-16T00:00:00.000Z",
+          "excerpt": "TSCTF-J 2026 部分题解"
+        }
+      ]
+    },
+    {
+      "name": "Kioroshi Aki",
+      "desc": "Hugo + Blowfish，主攻 Pwn",
+      "url": "https://kioroshiaki.github.io/",
+      "avatar": "https://kioroshiaki.github.io/img/blowfish_logo.png",
+      "hasFeed": true,
+      "items": [
+        {
+          "title": "音乐播放器与唱片机页开发记录",
+          "link": "https://kioroshiaki.github.io/posts/others/music-player/",
+          "date": "2026-10-16T13:30:00.000Z",
+          "excerpt": "现在体验到vibe coding有多离谱了"
+        },
+        {
+          "title": "TSCTF-J 2026 Pwn WriteUp",
+          "link": "https://kioroshiaki.github.io/posts/writeup/tsctf-j2026pwn/",
+          "date": "2026-10-14T00:00:00.000Z",
+          "excerpt": "这tm新生赛吗？"
+        },
+        {
+          "title": "TSCTF-J 2025 Pwn题目全复现",
+          "link": "https://kioroshiaki.github.io/posts/writeup/tsctf-j2025pwn/",
+          "date": "2026-05-29T00:00:00.000Z",
+          "excerpt": "好难"
+        }
+      ]
+    },
+    {
+      "name": "圆周率的废纸堆",
+      "desc": "里面或许有你需要的？",
+      "url": "https://piyuanzhoulv.github.io/",
+      "avatar": "https://piyuanzhoulv.github.io/images/logo.png",
+      "hasFeed": false,
+      "items": []
+    },
+    {
+      "name": "aClosure",
+      "desc": "Ciallo~",
+      "url": "https://aclosure.github.io/",
+      "avatar": "https://aclosure.github.io/images/Ak_char_007_closre_3.png",
+      "hasFeed": true,
+      "items": [
+        {
+          "title": "10-19 来自DASCTF站的两题",
+          "link": "https://aclosure.github.io/2026/10/20/10-19%20%E4%B8%A4%E9%A2%98/",
+          "date": "2026-10-19T16:00:00.000Z",
+          "excerpt": "尝试一下折叠效果，也为了你可以想想emmm类的分析喵。"
+        },
+        {
+          "title": "blog近期的更新和规划！",
+          "link": "https://aclosure.github.io/2026/10/20/blog%E8%BF%91%E6%9C%9F%E7%9A%84%E6%9B%B4%E6%96%B0%E5%92%8C%E8%A7%84%E5%88%92%EF%BC%81/",
+          "date": "2026-10-19T16:00:00.000Z",
+          "excerpt": "期待大家能够真的来水水这个评论区喵...(qaq"
+        },
+        {
+          "title": "10-20 来自DASCTF站的一题",
+          "link": "https://aclosure.github.io/2026/10/20/10-20%20%E4%B8%80%E9%A2%98/",
+          "date": "2026-10-19T16:00:00.000Z",
+          "excerpt": "来自ts出题人的wp"
+        }
+      ]
+    },
+    {
+      "name": "宛宛（Wan blog）",
+      "desc": "自建 Rin，人生五十年，如梦亦如幻",
+      "url": "https://blog.3w3.asia/",
+      "avatar": "https://blog.3w3.asia/favicon.png",
+      "hasFeed": true,
+      "items": [
+        {
+          "title": "在 iPadOS 26.6 上免越狱运行带 JIT 加速的 Linux 虚拟机：从 UTM SE 到 SideStore、StikDebug",
+          "link": "https://blog.3w3.asia/feed/6",
+          "date": "2026-10-18T09:16:26.000Z",
+          "excerpt": "在上AI创新实践课的时候发现ipad无法连接宿舍的arch主机了，因为网不知为何不太流畅。于是我本着折腾致死的态度开始研究ios平台的虚拟化。 # UTM SE 从官方gallery选择了排在第一个的"
+        },
+        {
+          "title": "从条件传送到编译器友好",
+          "link": "https://blog.3w3.asia/feed/5",
+          "date": "2026-10-17T07:26:27.000Z",
+          "excerpt": "csapp我读过好几遍了，随着阅历增加，以前感到困惑的东西也渐渐明亮起来 # 编译器友好 在我前几次看程序的机器级表示时，还没有cc（条件码)的概念。原因是那时候turing complete没有更新"
+        },
+        {
+          "title": "[TSCTF-J2026]我的WP",
+          "link": "https://blog.3w3.asia/feed/4",
+          "date": "2026-10-14T13:47:21.000Z",
+          "excerpt": "# TSCTF-J2026WP # 前言 我是一个初学者。看看比赛的成绩曲线显然能看出有大量题我是直接交给agent的（你办事，我放心）。但是在比赛过程中我也有很多体会，学到了很多东西。现在我将分享."
+        }
+      ]
+    },
+    {
+      "name": "Ch0kk4ku",
+      "desc": "Astro + Firefly，有趣有盼，无灾无难",
+      "url": "https://ch0kk4ku.github.io/",
+      "avatar": "https://ch0kk4ku.github.io/_astro/avatar.yr5wXXsA.avif",
+      "hasFeed": true,
+      "items": [
+        {
+          "title": "快速幂与龟速乘算法",
+          "link": "https://ch0kk4ku.github.io/posts/kuai-su-mi-yu-gui-su-cheng-suan-fa/",
+          "date": "2026-10-20T00:00:00.000Z",
+          "excerpt": "让我们来复习一些算法..."
+        },
+        {
+          "title": "MoeCTF 2026 Writeup",
+          "link": "https://ch0kk4ku.github.io/posts/moectf-2026-writeup/",
+          "date": "2026-10-15T00:00:00.000Z",
+          "excerpt": "MoeCTF 2026 部分题目的解题记录。"
+        },
+        {
+          "title": "TSCTF-J2026 Writeup",
+          "link": "https://ch0kk4ku.github.io/posts/tsctf-j2026-writeup/",
+          "date": "2026-10-15T00:00:00.000Z",
+          "excerpt": "这真的是招新赛吗 qwq"
+        }
+      ]
+    },
+    {
+      "name": "dalang",
+      "desc": "手写 HTML，健身与碎碎念",
+      "url": "https://xiaolang0817.github.io/personal_blog/",
+      "avatar": "https://xiaolang0817.github.io/personal_blog/touxiang.jpg",
+      "hasFeed": false,
+      "items": []
+    },
+    {
+      "name": "Mortal",
+      "desc": "网络安全学习者 / CTF 选手的学习记录",
+      "url": "https://aaaa521.github.io/mortal-blog/",
+      "avatar": "https://aaaa521.github.io/mortal-blog/avatar.png",
+      "hasFeed": true,
+      "items": [
+        {
+          "title": "你好，世界：博客开张",
+          "link": "https://aaaa521.github.io/mortal-blog/posts/hello-world/",
+          "date": "2026-10-15T00:00:00.000Z",
+          "excerpt": "折腾了一下午，这个站终于跑起来了。第一篇就随便聊聊为什么要开博客，以及之后打算写什么。"
+        },
+        {
+          "title": "フラグの恋：一道没做出来的编码题",
+          "link": "https://aaaa521.github.io/mortal-blog/posts/flag-no-koi/",
+          "date": "2026-10-12T00:00:00.000Z",
+          "excerpt": "唯一没解出来的题，也就是这篇。记录两条失败的思路，以及事后复盘出的方法论问题。"
+        },
+        {
+          "title": "TSCTF-J 2026 参赛总结",
+          "link": "https://aaaa521.github.io/mortal-blog/posts/tsctfj-2026-review/",
+          "date": "2026-10-12T00:00:00.000Z",
+          "excerpt": "第一次系统性地打完一场 CTF。八道题的复盘索引，以及一些关于\"会做\"和\"做出来\"之间差距的感想。"
+        }
+      ]
+    }
+  ]
+}

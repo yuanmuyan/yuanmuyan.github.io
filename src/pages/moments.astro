@@ -1,0 +1,120 @@
+---
+import MainGridLayout from "../layouts/MainGridLayout.astro";
+import feedData from "../data/friends-feed.json";
+
+// 数据由 scripts/fetch-friends.mjs 在构建前抓好（见 package.json 的 build 脚本），
+// 这里只负责把各站的最新文章按时间合并成一条时间线。
+const all = feedData.sites.flatMap((site) =>
+	site.items.map((item) => ({ ...item, site })),
+);
+
+all.sort((a, b) => new Date(b.date ?? 0).valueOf() - new Date(a.date ?? 0).valueOf());
+const items = all.slice(0, 48);
+
+const silentSites = feedData.sites.filter((site) => (site.items ?? []).length === 0);
+
+const dayOf = (iso) => (iso ? iso.slice(0, 10).replaceAll("-", "/") : "某天");
+
+const updatedAt = new Date(feedData.generatedAt).toLocaleString("zh-CN", {
+	timeZone: "Asia/Shanghai",
+	hour12: false,
+	month: "numeric",
+	day: "numeric",
+	hour: "2-digit",
+	minute: "2-digit",
+});
+---
+
+<MainGridLayout
+	title="朋友圈"
+	description="朋友们最近在写什么，汇总成一条时间线。"
+>
+	<div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
+		<div class="card-base z-10 px-9 py-6 relative w-full">
+			<div class="text-2xl font-bold text-[var(--primary)] mb-3">朋友圈</div>
+			<div class="text-black/50 dark:text-white/50 mb-1">
+				朋友们最近写了什么，都汇总在这里。数据在站点构建时抓一次，所以不是实时的，但每次更新都挺新。
+			</div>
+			<div class="text-xs text-black/30 dark:text-white/30 mb-6">
+				抓取于 {updatedAt} · 共 {items.length} 条 · 顺序按发布时间
+			</div>
+
+			{items.length === 0 && (
+				<div class="text-black/50 dark:text-white/50">
+					这次一条都没抓到，可能是朋友们都在偷懒，也可能是网络抽风了，晚点再来看看吧。
+				</div>
+			)}
+
+			<div class="flex flex-col">
+				{items.map((item, index) => (
+					<article class="flex gap-4">
+						{/* 时间轴 */}
+						<div class="flex flex-col items-center shrink-0 pt-1.5">
+							<img
+								src={item.site.avatar}
+								alt={item.site.name}
+								loading="lazy"
+								class="w-9 h-9 rounded-full object-cover bg-black/5 dark:bg-white/10"
+							/>
+							{index !== items.length - 1 && (
+								<div class="w-px flex-1 my-2 bg-black/10 dark:bg-white/10" />
+							)}
+						</div>
+
+						<div class="min-w-0 flex-1 pb-7">
+							<div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+								<a
+									href={item.site.url}
+									target="_blank"
+									rel="noopener noreferrer"
+									class="text-sm font-bold text-black/70 dark:text-white/70 transition hover:text-[var(--primary)]"
+								>
+									{item.site.name}
+								</a>
+								<span class="text-xs text-black/30 dark:text-white/30">{dayOf(item.date)}</span>
+							</div>
+							<a
+								href={item.link}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="block text-lg font-bold text-black dark:text-white leading-snug mt-1 transition hover:text-[var(--primary)]"
+							>
+								{item.title}
+							</a>
+							{item.excerpt && (
+								<div class="text-sm text-black/50 dark:text-white/50 mt-1 line-clamp-2 break-words">
+									{item.excerpt}
+								</div>
+							)}
+						</div>
+					</article>
+				))}
+			</div>
+
+			{silentSites.length > 0 && (
+				<div class="mt-2 pt-6 border-t border-black/10 dark:border-white/10">
+					<div class="text-sm text-black/50 dark:text-white/50 mb-3">
+						还有几位没开订阅（RSS），抓不到新文章，只能直接去逛逛：
+					</div>
+					<div class="flex flex-wrap gap-2">
+						{silentSites.map((site) => (
+							<a
+								href={site.url}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="btn-regular px-3 py-1.5 rounded-lg text-sm transition active:scale-[0.98]"
+							>
+								{site.name} ↗
+							</a>
+						))}
+					</div>
+				</div>
+			)}
+
+			<div class="mt-6 text-xs text-black/30 dark:text-white/30">
+				想看完整名单就去 <a href="/friends/" class="text-[var(--primary)] hover:underline">友链</a> 页；
+				想被收进来，只要站点有 RSS 就自动有了。
+			</div>
+		</div>
+	</div>
+</MainGridLayout>
