@@ -1,60 +1,60 @@
 {
-  "sites": [
-    {
-      "name": "Map1e-Suk1",
-      "desc": "Astro + Fuwari，写题解的那位",
-      "url": "https://map1e-suk1.github.io/",
-      "avatar": "https://map1e-suk1.github.io/avatar.webp",
-      "feeds": ["https://map1e-suk1.github.io/rss.xml"]
-    },
-    {
-      "name": "Kioroshi Aki",
-      "desc": "Hugo + Blowfish，主攻 Pwn",
-      "url": "https://kioroshiaki.github.io/",
-      "avatar": "https://kioroshiaki.github.io/img/blowfish_logo.png",
-      "feeds": ["https://kioroshiaki.github.io/index.xml"]
-    },
-    {
-      "name": "圆周率的废纸堆",
-      "desc": "里面或许有你需要的？",
-      "url": "https://piyuanzhoulv.github.io/",
-      "avatar": "https://piyuanzhoulv.github.io/images/logo.png",
-      "feeds": []
-    },
-    {
-      "name": "aClosure",
-      "desc": "Ciallo~",
-      "url": "https://aclosure.github.io/",
-      "avatar": "https://aclosure.github.io/images/Ak_char_007_closre_3.png",
-      "feeds": ["https://aclosure.github.io/atom.xml"]
-    },
-    {
-      "name": "宛宛（Wan blog）",
-      "desc": "自建 Rin，人生五十年，如梦亦如幻",
-      "url": "https://blog.3w3.asia/",
-      "avatar": "https://blog.3w3.asia/favicon.png",
-      "feeds": ["https://blog.3w3.asia/rss.xml"]
-    },
-    {
-      "name": "Ch0kk4ku",
-      "desc": "Astro + Firefly，有趣有盼，无灾无难",
-      "url": "https://ch0kk4ku.github.io/",
-      "avatar": "https://ch0kk4ku.github.io/_astro/avatar.yr5wXXsA.avif",
-      "feeds": ["https://ch0kk4ku.github.io/rss.xml"]
-    },
-    {
-      "name": "dalang",
-      "desc": "手写 HTML，健身与碎碎念",
-      "url": "https://xiaolang0817.github.io/personal_blog/",
-      "avatar": "https://xiaolang0817.github.io/personal_blog/touxiang.jpg",
-      "feeds": []
-    },
-    {
-      "name": "Mortal",
-      "desc": "网络安全学习者 / CTF 选手的学习记录",
-      "url": "https://aaaa521.github.io/mortal-blog/",
-      "avatar": "https://aaaa521.github.io/mortal-blog/avatar.png",
-      "feeds": ["https://aaaa521.github.io/mortal-blog/rss.xml"]
-    }
-  ]
+	"sites": [
+		{
+			"name": "Map1e-Suk1",
+			"desc": "Astro + Fuwari，写题解的那位",
+			"url": "https://map1e-suk1.github.io/",
+			"avatar": "https://map1e-suk1.github.io/avatar.webp",
+			"feeds": ["https://map1e-suk1.github.io/rss.xml"]
+		},
+		{
+			"name": "Kioroshi Aki",
+			"desc": "Hugo + Blowfish，主攻 Pwn",
+			"url": "https://kioroshiaki.github.io/",
+			"avatar": "https://kioroshiaki.github.io/img/blowfish_logo.png",
+			"feeds": ["https://kioroshiaki.github.io/index.xml"]
+		},
+		{
+			"name": "圆周率的废纸堆",
+			"desc": "里面或许有你需要的？",
+			"url": "https://piyuanzhoulv.github.io/",
+			"avatar": "https://piyuanzhoulv.github.io/images/logo.png",
+			"feeds": []
+		},
+		{
+			"name": "aClosure",
+			"desc": "Ciallo~",
+			"url": "https://aclosure.github.io/",
+			"avatar": "https://aclosure.github.io/images/Ak_char_007_closre_3.png",
+			"feeds": ["https://aclosure.github.io/atom.xml"]
+		},
+		{
+			"name": "宛宛（Wan blog）",
+			"desc": "自建 Rin，人生五十年，如梦亦如幻",
+			"url": "https://blog.3w3.asia/",
+			"avatar": "https://blog.3w3.asia/favicon.png",
+			"feeds": ["https://blog.3w3.asia/rss.xml"]
+		},
+		{
+			"name": "Ch0kk4ku",
+			"desc": "Astro + Firefly，有趣有盼，无灾无难",
+			"url": "https://ch0kk4ku.github.io/",
+			"avatar": "https://ch0kk4ku.github.io/_astro/avatar.yr5wXXsA.avif",
+			"feeds": ["https://ch0kk4ku.github.io/rss.xml"]
+		},
+		{
+			"name": "dalang",
+			"desc": "手写 HTML，健身与碎碎念",
+			"url": "https://xiaolang0817.github.io/personal_blog/",
+			"avatar": "https://xiaolang0817.github.io/personal_blog/touxiang.jpg",
+			"feeds": []
+		},
+		{
+			"name": "Mortal",
+			"desc": "网络安全学习者 / CTF 选手的学习记录",
+			"url": "https://aaaa521.github.io/mortal-blog/",
+			"avatar": "https://aaaa521.github.io/mortal-blog/avatar.png",
+			"feeds": ["https://aaaa521.github.io/mortal-blog/rss.xml"]
+		}
+	]
 }

@@ -9,6 +9,7 @@
 		"ignoreUnknown": false,
 		"includes": [
 			"**",
+			"!**/src/data/friends-feed.json",
 			"!**/src/**/*.css",
 			"!**/src/public/**/*",
 			"!**/dist/**/*",

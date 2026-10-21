@@ -1,6 +1,6 @@
 ---
-import MainGridLayout from "../layouts/MainGridLayout.astro";
 import feedData from "../data/friends-feed.json";
+import MainGridLayout from "../layouts/MainGridLayout.astro";
 
 // 数据由 scripts/fetch-friends.mjs 在构建前抓好（见 package.json 的 build 脚本），
 // 这里只负责把各站的最新文章按时间合并成一条时间线。
@@ -8,12 +8,17 @@ const all = feedData.sites.flatMap((site) =>
 	site.items.map((item) => ({ ...item, site })),
 );
 
-all.sort((a, b) => new Date(b.date ?? 0).valueOf() - new Date(a.date ?? 0).valueOf());
+all.sort(
+	(a, b) => new Date(b.date ?? 0).valueOf() - new Date(a.date ?? 0).valueOf(),
+);
 const items = all.slice(0, 48);
 
-const silentSites = feedData.sites.filter((site) => (site.items ?? []).length === 0);
+const silentSites = feedData.sites.filter(
+	(site) => (site.items ?? []).length === 0,
+);
 
-const dayOf = (iso) => (iso ? iso.slice(0, 10).replaceAll("-", "/") : "某天");
+const dayOf = (iso?: string | null) =>
+	iso ? iso.slice(0, 10).replaceAll("-", "/") : "某天";
 
 const updatedAt = new Date(feedData.generatedAt).toLocaleString("zh-CN", {
 	timeZone: "Asia/Shanghai",
